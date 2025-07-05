@@ -2,7 +2,7 @@
 
 Building a French Small Language Model
 
-## Quick Setup
+## 1. Quick Setup
 
 _Using [`uv`](https://github.com/astral-sh/uv) for fast and reliable dependency management._
 
@@ -17,3 +17,28 @@ That's it, you can now run any command you want!
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
 ```
+
+## 2. Evaluation
+
+```bash
+# Linux/MacOS
+export HF_TOKEN=your_hf_token
+# Windows
+$env:HF_TOKEN="your_hf_token"
+```
+
+| Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
+|-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| Evaluation French Benchmarks   | `make eval`       | `python run_eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval_fr`, `EVAL_MODEL=Qwen/Qwen3-0.6B`                              |
+
+⚠️ We use [lighteval](https://github.com/huggingface/lighteval) for evaluation, which may not be fully supported on Windows.
+
+## 3. Results
+
+| Model Name | IFEval-fr (strict prompt) |
+|------------|-------------|
+| Qwen3-0.6B   | 34.7        |
+
+## 3. Resources:
+- [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)
+- [OpenLLMFrenchLeadboard Dataset (not official datasets)](https://huggingface.co/collections/le-leadboard/openllmfrenchleadboard-jeu-de-donnees-67126437539a23c65554fd88)
