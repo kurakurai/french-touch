@@ -7,13 +7,15 @@ name = "french-slm"
 version = "0.1.0"
 description = "French SLM."
 authors = [
-  { name = "KuraKura AI"},
+  {name = "KuraKura AI"},
 ]
-requires-python = "==3.12.*"
+requires-python = "==3.10.*"
 dependencies = [
-  "transformers==4.51.3",
-  "datasets==3.5.0",
-  "wandb==0.19.11"
+  "lighteval==0.10.0",
+  "vllm==0.9.1",
+  "ray==2.47.1",
+  "more-itertools==10.7.0",
+  "wandb==0.19.11",
 ]
 
 [tool.uv]

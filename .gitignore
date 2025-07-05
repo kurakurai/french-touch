@@ -2,7 +2,10 @@
 __pycache__/
 *.py[codz]
 *$py.class
+
+# Extra
 uv.lock
+results_french_evals/
 
 # C extensions
 *.so
