@@ -6,16 +6,30 @@ from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
 import argparse
 import nltk
 
+from french_evals import TASKS_TABLE
+
 # https://github.com/leaderboard-modeles-IA-francais/evaluation-pipeline-leaderboard/blob/main/run-lighteval.py
 
 
-def get_tasks(tasks):
-    task_lookup = {
-        "ifeval_fr": "community|ifeval-fr|0|0",
-        "gpqa_fr": "community|gpqa-fr|0|0",
-    }
-    selected_tasks = ",".join([task_lookup[t] for t in tasks])
-    return selected_tasks
+def get_tasks(task_keys):
+    """
+    Build the comma-separated task specifier strings for given task keys.
+    """
+    selected = []
+    for key in task_keys:
+        if key == "bbh-fr":
+            for task in TASKS_TABLE:
+                # each task has .name and .suite attributes
+                if hasattr(task, "name") and hasattr(task, "suite"):
+                    if task.name.startswith("bbh-fr:") and "community" in task.suite:
+                        selected.append(f"community|{task.name}|0|0")
+        elif key == "ifeval_fr":
+            selected.append("community|ifeval-fr|0|0")
+        elif key == "gpqa_fr":
+            selected.append("community|gpqa-fr|0|0")
+        else:
+            raise ValueError(f"Unknown task key: {key}")
+    return ",".join(selected)
 
 
 def main(args):
@@ -71,8 +85,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tasks",
         nargs="+",
-        choices=["ifeval_fr", "gpqa_fr"],
-        default="ifeval_fr",
+        choices=["ifeval_fr", "gpqa_fr", "bbh-fr"],
+        required=True,
         help="Tasks to evaluate the model.",
     )
     parser.add_argument(

@@ -20,6 +20,8 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
+Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`
+
 ```bash
 # Linux/MacOS
 export HF_TOKEN=your_hf_token
@@ -37,7 +39,7 @@ $env:HF_TOKEN="your_hf_token"
 
 | Model Name | IFEval-fr (strict prompt) |
 |------------|-------------|
-| Qwen3-0.6B   | 34.7        |
+| Qwen3-0.6B   | 36.2        |
 
 ## 3. Resources:
 - [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)
