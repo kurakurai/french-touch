@@ -37,9 +37,11 @@ $env:HF_TOKEN="your_hf_token"
 
 ## 3. Results
 
-| Model Name | IFEval-fr (strict prompt) |
-|------------|-------------|
-| Qwen3-0.6B   | 36.2        |
+| Model Name | IFEval-fr (strict prompt) | BBH-fr |
+|------------|-------------|-------------|
+| Qwen3-0.6B   | 20.53        |  34.13         |
+| Qwen3-0.6B-Base   |      -      |    40.85            |
+
 
 ## 3. Resources:
 - [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)

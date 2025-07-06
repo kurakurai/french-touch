@@ -3,52 +3,42 @@ from pathlib import Path
 from lighteval.logging.evaluation_tracker import EvaluationTracker
 from lighteval.models.vllm.vllm_model import VLLMModelConfig
 from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
+from lighteval.models.utils import GenerationParameters
 import argparse
 import nltk
 
-from french_evals import TASKS_TABLE
 
-# https://github.com/leaderboard-modeles-IA-francais/evaluation-pipeline-leaderboard/blob/main/run-lighteval.py
+TASKS_REFS = {
+    "ifeval-fr": "community|ifeval-fr|0|0",
+    "gpqa-fr": "community|gpqa-fr|0|0",
+    "bbh-fr": "community|bbh-fr|0|0",
+}
 
 
 def get_tasks(task_keys):
     """
-    Build the comma-separated task specifier strings for given task keys.
+    Get the tasks based on the provided task keys.
     """
-    selected = []
+    tasks = []
     for key in task_keys:
-        if key == "bbh-fr":
-            for task in TASKS_TABLE:
-                # each task has .name and .suite attributes
-                if hasattr(task, "name") and hasattr(task, "suite"):
-                    if task.name.startswith("bbh-fr:") and "community" in task.suite:
-                        selected.append(f"community|{task.name}|0|0")
-        elif key == "ifeval_fr":
-            selected.append("community|ifeval-fr|0|0")
-        elif key == "gpqa_fr":
-            selected.append("community|gpqa-fr|0|0")
+        if key in TASKS_REFS:
+            tasks.append(TASKS_REFS[key])
         else:
-            raise ValueError(f"Unknown task key: {key}")
-    return ",".join(selected)
+            raise ValueError(f"Task {key} is not defined in TASKS_REFS.")
+    return ",".join(tasks)
 
 
 def main(args):
     """
     Main function to run the evaluation pipeline with vLLM backend.
     """
-
-    if os.environ.get("HF_TOKEN") is None:
-        raise ValueError(
-            "Please set the HF_TOKEN environment variable to your Hugging Face token."
-        )
-
     try:
         nltk.data.find("tokenizers/punkt")
     except LookupError:
         print("Downloading NLTK punkt tokenizer...")
         nltk.download("punkt_tab")
 
-    tasks_path = Path(f"src/eval/french_evals.py")
+    tasks_path = Path(f"src/eval/tasks.py")
 
     evaluation_tracker = EvaluationTracker(
         output_dir=args.output_dir,
@@ -61,11 +51,14 @@ def main(args):
         custom_tasks_directory=tasks_path,
     )
 
-    # Can add more parameters here
+    generation_params = GenerationParameters(
+        temperature=0.0,  # Set temperature to 0 for deterministic outputs
+    )
     model_config = VLLMModelConfig(
         model_name=args.model,
         dtype="bfloat16",
-        use_chat_template=True,
+        use_chat_template=False,
+        generation_parameters=generation_params,
     )
 
     pipeline = Pipeline(
@@ -85,14 +78,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tasks",
         nargs="+",
-        choices=["ifeval_fr", "gpqa_fr", "bbh-fr"],
+        choices=["ifeval-fr", "gpqa-fr", "bbh-fr"],
         required=True,
         help="Tasks to evaluate the model.",
     )
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="./results_french_evals",
+        default="./results_evals",
         help="Directory to save evaluation results.",
     )
     parser.add_argument(

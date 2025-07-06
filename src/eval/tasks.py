@@ -71,7 +71,7 @@ gpqa_fr_task = LightevalTaskConfig(
     version=0,
 )
 
-# BigBench Hard task
+# BBH-fr task
 bbh_boolean_expressions_community = LightevalTaskConfig(
     name="bbh-fr:expressions_booléennes",
     suite=["community"],

@@ -5,7 +5,7 @@ __pycache__/
 
 # Extra
 uv.lock
-results_french_evals/
+results_evals/
 
 # C extensions
 *.so
