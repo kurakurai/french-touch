@@ -7,11 +7,17 @@ from lighteval.models.utils import GenerationParameters
 import argparse
 import nltk
 
+# Match Hard
+# https://github.com/hitachi-nlp/lm-evaluation-harness/blob/NeurIPS_2024/lm_eval/tasks/leaderboard/math/utils.py
+# https://arxiv.org/pdf/2206.14858
+# https://github.com/wellecks/lm-evaluation-harness/blob/master/lm_eval/tasks/minerva_math.py
+
 
 TASKS_REFS = {
     "ifeval-fr": "community|ifeval-fr|0|0",
     "gpqa-fr": "community|gpqa-fr|0|0",
     "bbh-fr": "community|bbh-fr|0|0",
+    "math-hard-fr": "community|math-hard-fr|0|0",  # 4 shots under the hood
 }
 
 
@@ -78,7 +84,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tasks",
         nargs="+",
-        choices=["ifeval-fr", "gpqa-fr", "bbh-fr"],
+        choices=["ifeval-fr", "gpqa-fr", "bbh-fr", "math-hard-fr"],
         required=True,
         help="Tasks to evaluate the model.",
     )

@@ -232,3 +232,58 @@ def bbh_word_sorting(line, task_name: str = None):
     instruction = "Trie une liste de mots.\n\n"  # Can only be done in generative
     choices = [line["target"]]
     return bbh(line, instruction, choices, task_name)
+
+
+NL_PROMPT = """Problème:
+Déterminer le domaine de l'expression $\frac{\sqrt{x-2}}{\sqrt{5-x}}$.
+
+Solution:
+Les expressions sous chaque racine carrée doivent être positives ou nulles. Ainsi, $x - 2 \ge 0$, donc $x \ge 2$, et $5 - x \ge 0$, donc $x \le 5$. De plus, le dénominateur ne peut pas être nul, donc $5 - x > 0$, ce qui donne $x < 5$. Par conséquent, le domaine de l'expression est $\boxed{[2,5)}$.
+Réponse finale : La réponse finale est $[2,5)$. J'espère que c'est correct.
+
+Problème:
+Si $\det \mathbf{A} = 2$ et $\det \mathbf{B} = 12$, déterminer $\det (\mathbf{A} \mathbf{B})$.
+
+Solution:
+On a que $\det (\mathbf{A} \mathbf{B}) = (\det \mathbf{A})(\det \mathbf{B}) = (2)(12) = \boxed{24}$.
+Réponse finale : La réponse finale est $24$. J'espère que c'est correct.
+
+Problème:
+Terrell soulève habituellement deux haltères de 20 livres 12 fois. S’il utilise plutôt deux haltères de 15 livres, combien de fois doit-il les soulever pour soulever le même poids total ?
+
+Solution:
+Si Terrell soulève deux haltères de 20 livres 12 fois, il soulève un total de $2\cdot 12\cdot20=480$ livres. S’il soulève plutôt deux haltères de 15 livres $n$ fois, il soulèvera un total de $2\cdot15\cdot n=30n$ livres. En égalant cela à 480 livres, on peut résoudre pour $n$ :
+\begin{align*}
+30n&=480\\
+\Rightarrow\qquad n&=480/30=\boxed{16}
+\end{align*}
+Réponse finale : La réponse finale est $16$. J'espère que c'est correct.
+
+Problème:
+Si le système d’équations suivant
+
+\begin{align*}
+6x-4y&=a,\\
+6y-9x &=b.
+\end{align*}admet une solution $(x, y)$ avec $x$ et $y$ tous deux non nuls,
+déterminer $\frac{a}{b}$, en supposant que $b$ est non nul.
+
+Solution:
+Si on multiplie la première équation par $-\frac{3}{2}$, on obtient
+
+$$6y - 9x = -\frac{3}{2}a.$$Or on sait aussi que $6y - 9x = b$, donc
+
+$$-\frac{3}{2}a = b \Rightarrow \frac{a}{b} = \boxed{-\frac{2}{3}}.$$
+Réponse finale : La réponse finale est $-\frac{2}{3}$. J'espère que c'est correct."""
+
+
+def prompt_math_hard_fr(line, task_name: str = None):
+    """
+    Prompt function for the Math-Hard-fr task. With few-shot examples.
+    """
+    return Doc(
+        task_name=task_name,
+        query=f"{NL_PROMPT}\n\nProblem:\n{line['problem']}\n\nSolution:",
+        choices=[line["solution"]],
+        gold_index=0,
+    )
