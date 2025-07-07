@@ -33,14 +33,14 @@ $env:HF_TOKEN="your_hf_token"
 |-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | Evaluation French Benchmarks   | `make eval`       | `python run_eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval_fr`, `EVAL_MODEL=Qwen/Qwen3-0.6B`                              |
 
-⚠️ We use [lighteval](https://github.com/huggingface/lighteval) for evaluation, which may not be fully supported on Windows.
+⚠️ We use [Lighteval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
 
 ## 3. Results
 
-| Model Name | IFEval-fr (strict prompt) | BBH-fr |
-|------------|-------------|-------------|
-| Qwen3-0.6B   | 20.53        |  34.13         |
-| Qwen3-0.6B-Base   |      -      |    40.85            |
+| Evaluation               | Qwen3-0.6B | Qwen3-0.6B-Base |
+|--------------------------|------------|-----------------|
+| IFEval-fr (strict prompt)| 20.53      | -               |
+| BBH-fr                   | 34.13      | 40.85           |
 
 
 ## 3. Resources:
