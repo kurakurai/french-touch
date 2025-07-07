@@ -44,6 +44,19 @@ def prompt_gpqa_fr(line, task_name: str = None):
     )
 
 
+# boolq-fr prompt function
+def prompt_boolq_fr(line, task_name: str = None):
+    question = (
+        line["question"][:-1] if line["question"][-2:] == "?" else line["question"]
+    )
+    return Doc(
+        task_name=task_name,
+        query=f"Passage: {line['passage']}\nQuestion: {question}\nAnswer:",
+        choices=["Non", "Oui"],
+        gold_index=int(line["label"]),
+    )
+
+
 # bbh-fr prompt functions
 def bbh(line, instruction, choices, task_name: str = None):
     return Doc(

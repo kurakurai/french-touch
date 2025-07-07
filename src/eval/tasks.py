@@ -92,6 +92,29 @@ math_hard_fr_task = LightevalTaskConfig(
     version=0,
 )
 
+# BoolQ-fr task
+boolq_fr_task = LightevalTaskConfig(
+    name="boolq-fr",
+    suite=["community"],
+    prompt_function=custom_prompt.prompt_boolq_fr,
+    hf_repo="manu/french_boolq",
+    hf_subset="default",
+    hf_avail_splits=["train", "valid"],
+    evaluation_splits=["test"],
+    few_shots_split="train",
+    few_shots_select="random",
+    generation_size=5,
+    metrics=[
+        Metrics.exact_match,
+        Metrics.quasi_exact_match,
+        Metrics.prefix_exact_match,
+        Metrics.prefix_quasi_exact_match,
+    ],
+    stop_sequence=["\n"],
+    trust_dataset=True,
+    version=0,
+)
+
 # BBH-fr task
 bbh_boolean_expressions_community = LightevalTaskConfig(
     name="bbh-fr:expressions_booléennes",
@@ -693,6 +716,7 @@ TASKS_TABLE = [
     ifeval_fr_task,
     gpqa_fr_task,
     math_hard_fr_task,
+    boolq_fr_task,
     bbh_boolean_expressions_community,
     bbh_causal_judgment_community,
     bbh_date_understanding_community,

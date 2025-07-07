@@ -20,7 +20,7 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
-Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`, `Math-HARD-fr`
+Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`
 
 ```bash
 # Linux/MacOS
