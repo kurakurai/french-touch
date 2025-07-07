@@ -234,6 +234,7 @@ def bbh_word_sorting(line, task_name: str = None):
     return bbh(line, instruction, choices, task_name)
 
 
+# math-hard-fr prompt function
 NL_PROMPT = """Problème:
 Déterminer le domaine de l'expression $\frac{\sqrt{x-2}}{\sqrt{5-x}}$.
 
