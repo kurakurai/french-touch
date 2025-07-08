@@ -13,6 +13,8 @@ TASKS_REFS = {
     "gpqa-fr": "community|gpqa-fr|0|0",
     "bbh-fr": "community|bbh-fr|0|0",
     "boolq-fr": "community|boolq-fr|0|0",
+    "mmlu-fr": "community|mmlu_fr|0|0",
+    "musr-fr": "community|musr-fr|0|0",
     "math-hard-fr": "community|math-hard-fr|0|0",  # 4 shots under the hood
 }
 
@@ -80,7 +82,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tasks",
         nargs="+",
-        choices=["ifeval-fr", "gpqa-fr", "bbh-fr", "boolq-fr", "math-hard-fr"],
+        choices=[
+            "ifeval-fr",
+            "gpqa-fr",
+            "bbh-fr",
+            "boolq-fr",
+            "mmlu-fr",
+            "musr-fr",
+            "math-hard-fr",
+        ],
         required=True,
         help="Tasks to evaluate the model.",
     )

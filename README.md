@@ -1,6 +1,6 @@
 # French Small Language Model
 
-Building a French Small Language Model
+Building a good French Small Language Model.
 
 ## 1. Quick Setup
 
@@ -20,7 +20,7 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
-Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`
+Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`
 
 ```bash
 # Linux/MacOS
@@ -41,6 +41,7 @@ $env:HF_TOKEN="your_hf_token"
 |--------------------------|------------|-----------------|
 | IFEval-fr (strict prompt)| 20.53      | -               |
 | BBH-fr                   | 34.13      | 40.85           |
+| BoolQ-fr                 | 1.91       | -               |
 
 
 ## 3. Resources:

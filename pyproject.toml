@@ -11,7 +11,7 @@ authors = [
 ]
 requires-python = "==3.10.*"
 dependencies = [
-  "lighteval==0.10.0",
+  "lighteval[extended_tasks]==0.10.0",
   "vllm==0.9.1",
   "ray==2.47.1",
   "more-itertools==10.7.0",

@@ -247,6 +247,23 @@ def bbh_word_sorting(line, task_name: str = None):
     return bbh(line, instruction, choices, task_name)
 
 
+# musr-fr prompt function
+def musr_fr(line, task_name: str = None):
+    choices = line["choices"]
+    query = line["narrative"] + "\n\n"
+    query += line["question"] + "\n\n"
+    for i, choice in enumerate(choices):
+        query += f"{i + 1} - {choice}\n"
+    query += "Answer:"
+
+    return Doc(
+        task_name=task_name,
+        query=query,
+        choices=choices,
+        gold_index=line["answer_index"],
+    )
+
+
 # math-hard-fr prompt function
 NL_PROMPT = """Problème:
 Déterminer le domaine de l'expression $\frac{\sqrt{x-2}}{\sqrt{5-x}}$.

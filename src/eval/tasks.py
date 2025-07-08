@@ -1,38 +1,17 @@
-# MIT License
-
-# Copyright (c) 2024 The HuggingFace Team
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
-# ruff: noqa: F405, F403, F401
-"""
-Custom evaluation tasks for lighteval.
-
-This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then imported by LightEval.
-
-This module implements tasks for the french specific datasets
-See : https://huggingface.co/fr-gouv-coordination-ia
-"""
-
 from lighteval.metrics.metrics import Metrics
 from lighteval.tasks.extended.ifeval.main import ifeval_metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
+from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
+from lighteval.tasks.default_prompts import LETTER_INDICES
+from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
+from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
+from lighteval.metrics.normalizations import (
+    LogProbCharNorm,
+    LogProbPMINorm,
+    LogProbTokenNorm,
+)
+from lighteval.utils.language import Language
+from lighteval.tasks.templates.utils.formulation import MCFFormulation
 import prompts as custom_prompt
 import metrics as custom_metric
 
@@ -104,7 +83,7 @@ boolq_fr_task = LightevalTaskConfig(
     few_shots_split="train",
     few_shots_select="random",
     generation_size=5,
-    metrics=[
+    metric=[
         Metrics.exact_match,
         Metrics.quasi_exact_match,
         Metrics.prefix_exact_match,
@@ -114,6 +93,87 @@ boolq_fr_task = LightevalTaskConfig(
     trust_dataset=True,
     version=0,
 )
+
+# MuSR tasks
+musr_fr_murder_mysteries = LightevalTaskConfig(
+    name="musr-fr:murder_mysteries",
+    suite=["community"],
+    prompt_function=custom_prompt.musr_fr,
+    hf_repo="le-leadboard/musr-fr",
+    hf_subset="default",
+    hf_avail_splits=["murder_mysteries"],
+    evaluation_splits=["murder_mysteries"],
+    few_shots_split="train",
+    few_shots_select="random",
+    generation_size=1,
+    metric=[Metrics.loglikelihood_acc],
+    stop_sequence=["\n"],
+    trust_dataset=True,
+    version=0,
+)
+musr_fr_object_placements = LightevalTaskConfig(
+    name="musr-fr:object_placements",
+    suite=["community"],
+    prompt_function=custom_prompt.musr_fr,
+    hf_repo="le-leadboard/musr-fr",
+    hf_subset="default",
+    hf_avail_splits=["object_placements"],
+    evaluation_splits=["object_placements"],
+    few_shots_split="train",
+    few_shots_select="random",
+    generation_size=1,
+    metric=[Metrics.loglikelihood_acc],
+    stop_sequence=["\n"],
+    trust_dataset=True,
+    version=0,
+)
+musr_fr_team_allocation = LightevalTaskConfig(
+    name="musr-fr:team_allocation",
+    suite=["community"],
+    prompt_function=custom_prompt.musr_fr,
+    hf_repo="le-leadboard/musr-fr",
+    hf_subset="default",
+    hf_avail_splits=["team_allocation"],
+    evaluation_splits=["team_allocation"],
+    few_shots_split="train",
+    few_shots_select="random",
+    generation_size=1,
+    metric=[Metrics.loglikelihood_acc],
+    stop_sequence=["\n"],
+    trust_dataset=True,
+    version=0,
+)
+
+# MMLU-fr task
+mmlu_fr_task = LightevalTaskConfig(
+    name="mmlu_fr",
+    prompt_function=get_mcq_prompt_function(
+        Language.FRENCH,
+        lambda line: {
+            "question": line["Question"],
+            "choices": [line["A"], line["B"], line["C"], line["D"]],
+            "gold_idx": LETTER_INDICES.index(line["Answer"]),
+        },
+        formulation=MCFFormulation(),
+    ),
+    suite=["community"],
+    hf_repo="openai/MMMLU",
+    hf_subset="FR_FR",
+    evaluation_splits=["test"],
+    hf_avail_splits=["test"],
+    few_shots_split="train",
+    few_shots_select="random",
+    hf_revision="038c7808122969ead7456361af05cb8f47d247f8",
+    metric=get_metrics_for_formulation(
+        MCFFormulation(),
+        [
+            loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+            loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+            loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+        ],
+    ),
+)
+
 
 # BBH-fr task
 bbh_boolean_expressions_community = LightevalTaskConfig(
@@ -717,6 +777,10 @@ TASKS_TABLE = [
     gpqa_fr_task,
     math_hard_fr_task,
     boolq_fr_task,
+    mmlu_fr_task,
+    musr_fr_team_allocation,
+    musr_fr_object_placements,
+    musr_fr_murder_mysteries,
     bbh_boolean_expressions_community,
     bbh_causal_judgment_community,
     bbh_date_understanding_community,
