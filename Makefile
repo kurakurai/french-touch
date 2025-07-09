@@ -3,7 +3,7 @@ PYTHON               := uv run python
 
 EVAL_SCRIPT		:= src/eval/eval.py
 
-EVAL_TASKS ?= gpqa-diamond-fr
+EVAL_TASKS ?= ifeval-fr
 EVAL_MODEL ?= Qwen/Qwen2.5-1.5B-Instruct
 
 .PHONY: env eval

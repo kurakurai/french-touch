@@ -50,7 +50,7 @@ gpqa_diamond_fr_task = LightevalTaskConfig(
     ],
     stop_sequence=[],
     trust_dataset=True,
-    version=0,
+    version=1,
 )
 
 

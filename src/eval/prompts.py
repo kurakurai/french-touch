@@ -22,18 +22,25 @@ def prompt_ifeval_fr(line, task_name: str = None):
 def gpqa_diamond_fr_instruct(line, task_name: str = None):
     """Prompt template adapted from simple-evals: https://github.com/openai/simple-evals/blob/83ed7640a7d9cd26849bcb3340125002ef14abbe/common.py#L14"""
     gold_index = random.randint(0, 3)
-    choices = [line["Incorrect Answer 1"], line["Incorrect Answer 2"], line["Incorrect Answer 3"]]
+    choices = [
+        line["Incorrect Answer 1"],
+        line["Incorrect Answer 2"],
+        line["Incorrect Answer 3"],
+    ]
     choices.insert(gold_index, line["Correct Answer"])
-    instruction = "Answer the following multiple choice question. The last line of your response should be of the following format: 'Answer: $LETTER' (without quotes) where LETTER is one of ABCD. Think step by step before answering."
-    query_template = "{Instruction}\n\n{Question}\n\nA) {A}\nB) {B}\nC) {C}\nD) {D}"
+    query_template = (
+        "Répondez à la question à choix multiple suivante. "
+        "La dernière ligne de votre réponse doit avoir le format suivant : 'Réponse : $LETTRE' "
+        "(sans les guillemets) où LETTRE est l'une de A, B, C ou D. "
+        "Réfléchissez étape par étape avant de répondre.\n\n"
+        "{Question}\n\n"
+        "A) {A}\n"
+        "B) {B}\n"
+        "C) {C}\n"
+        "D) {D}"
+    )
     query = query_template.format(
-        # Stripping to avoid accidental extra whitespaces, present in GPQA
-        A=choices[0].strip(),
-        B=choices[1].strip(),
-        C=choices[2].strip(),
-        D=choices[3].strip(),
-        Question=line["problem"].strip(),
-        Instruction=instruction,
+        A=choices[0], B=choices[1], C=choices[2], D=choices[3], Question=line["problem"]
     )
 
     return Doc(
@@ -41,7 +48,7 @@ def gpqa_diamond_fr_instruct(line, task_name: str = None):
         query=query,
         choices=LETTER_INDICES[: len(choices)],
         gold_index=gold_index,
-        instruction=instruction,
+        instruction=query,
     )
 
 

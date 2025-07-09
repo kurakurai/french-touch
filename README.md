@@ -31,7 +31,7 @@ $env:HF_TOKEN="your_hf_token"
 
 | Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
 |-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Evaluation French Benchmarks   | `make eval`       | `python run_eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval_fr`, `EVAL_MODEL=Qwen/Qwen3-0.6B`                              |
+| Evaluation French Benchmarks   | `make eval`       | `python run_eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval_fr`, `EVAL_MODEL=Qwen/Qwen2.5-1.5B-Instruct`                              |
 
 ⚠️ We use [Lighteval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
 
