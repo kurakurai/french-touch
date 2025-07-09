@@ -44,7 +44,7 @@ gpqa_diamond_fr_task = LightevalTaskConfig(
     evaluation_splits=["train"],
     few_shots_split="train",
     few_shots_select="random_sampling",
-    generation_size=32768,
+    generation_size=2048,
     metric=[
         custom_metric.gpqa_instruct_pass_fr_at_1_1n,
     ],

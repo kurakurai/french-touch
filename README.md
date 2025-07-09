@@ -42,12 +42,12 @@ Parameters: `Temperature=0.0`
 | Evaluation               | Qwen2.5-1.5B | 
 |--------------------------|--------------|
 | IFEval-fr (strict prompt)| 23.78        |
-| GPQA-Diamond-fr          | 27.44        |
+| GPQA-Diamond-fr          | 29.02        |
 | BoolQ-fr                 | 69.3         | 
 | Math-Hard-fr             | 4.77         | 
 | MMLU-fr                  | 48.17        | 
-| BBH-fr                   | -            | 
-| MuSR-fr                  |              | 
+| BBH-fr                   | 49.64        | 
+| MuSR-fr                  | 37.47        | 
 
 
 ## 3. Resources:
