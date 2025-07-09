@@ -20,7 +20,7 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
-Currently supports: `IFEval-fr`, `GPQA-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`
+Currently supports: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`
 
 ```bash
 # Linux/MacOS
@@ -37,11 +37,17 @@ $env:HF_TOKEN="your_hf_token"
 
 ## 3. Results
 
-| Evaluation               | Qwen3-0.6B | Qwen3-0.6B-Base |
-|--------------------------|------------|-----------------|
-| IFEval-fr (strict prompt)| 20.53      | -               |
-| BBH-fr                   | 34.13      | 40.85           |
-| BoolQ-fr                 | 1.91       | -               |
+Parameters: `Temperature=0.0`
+
+| Evaluation               | Qwen2.5-1.5B | 
+|--------------------------|--------------|
+| IFEval-fr (strict prompt)| 23.78        |
+| GPQA-Diamond-fr          | 27.44        |
+| BoolQ-fr                 | 69.3         | 
+| Math-Hard-fr             | 4.77         | 
+| MMLU-fr                  | 48.17        | 
+| BBH-fr                   | -            | 
+| MuSR-fr                  |              | 
 
 
 ## 3. Resources:

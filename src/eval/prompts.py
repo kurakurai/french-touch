@@ -18,26 +18,27 @@ def prompt_ifeval_fr(line, task_name: str = None):
     )
 
 
-# gpqa-fr prompt function
-def prompt_gpqa_fr(line, task_name: str = None):
+# gpqa-diamond-fr prompt function
+def gpqa_diamond_fr_instruct(line, task_name: str = None):
+    """Prompt template adapted from simple-evals: https://github.com/openai/simple-evals/blob/83ed7640a7d9cd26849bcb3340125002ef14abbe/common.py#L14"""
     gold_index = random.randint(0, 3)
-    choices = [
-        line["Réponse incorrecte 1"],
-        line["Réponse incorrecte 2"],
-        line["Réponse incorrecte 3"],
-    ]
-    choices.insert(gold_index, line["Réponse correcte"])
-
-    instruction = "Choisissez la réponse correcte aux questions suivantes.\n\n"
-
-    query = f"Question: {line['Question']}\n"
-    query += "".join(
-        [f"{key}. {choice}\n" for key, choice in zip(LETTER_INDICES, choices)]
+    choices = [line["Incorrect Answer 1"], line["Incorrect Answer 2"], line["Incorrect Answer 3"]]
+    choices.insert(gold_index, line["Correct Answer"])
+    instruction = "Answer the following multiple choice question. The last line of your response should be of the following format: 'Answer: $LETTER' (without quotes) where LETTER is one of ABCD. Think step by step before answering."
+    query_template = "{Instruction}\n\n{Question}\n\nA) {A}\nB) {B}\nC) {C}\nD) {D}"
+    query = query_template.format(
+        # Stripping to avoid accidental extra whitespaces, present in GPQA
+        A=choices[0].strip(),
+        B=choices[1].strip(),
+        C=choices[2].strip(),
+        D=choices[3].strip(),
+        Question=line["problem"].strip(),
+        Instruction=instruction,
     )
-    query += "Réponse: "
+
     return Doc(
         task_name=task_name,
-        query=f"{instruction}{query}",
+        query=query,
         choices=LETTER_INDICES[: len(choices)],
         gold_index=gold_index,
         instruction=instruction,
@@ -47,11 +48,11 @@ def prompt_gpqa_fr(line, task_name: str = None):
 # boolq-fr prompt function
 def prompt_boolq_fr(line, task_name: str = None):
     question = (
-        line["question"][:-1] if line["question"][-2:] == "?" else line["question"]
+        line["question"][:-1] if line["question"][-2:] == "??" else line["question"]
     )
     return Doc(
         task_name=task_name,
-        query=f"Passage: {line['passage']}\nQuestion: {question}\nAnswer:",
+        query=f"Passage: {line['passage']}\nQuestion: {question}\nRéponse: ",
         choices=["Non", "Oui"],
         gold_index=int(line["label"]),
     )

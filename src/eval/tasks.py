@@ -33,20 +33,22 @@ ifeval_fr_task = LightevalTaskConfig(
     version="0.1",
 )
 
-# GPQA-fr task
-gpqa_fr_task = LightevalTaskConfig(
-    name="gpqa-fr",
+# GPQA-Diamond-fr task
+gpqa_diamond_fr_task = LightevalTaskConfig(
+    name="gpqa-diamond-fr",
     suite=["community"],
-    prompt_function=custom_prompt.prompt_gpqa_fr,
+    prompt_function=custom_prompt.gpqa_diamond_fr_instruct,
     hf_repo="le-leadboard/gpqa-fr",
-    hf_subset="default",
+    hf_subset="gpqa_diamond",
     hf_avail_splits=["train"],
     evaluation_splits=["train"],
     few_shots_split="train",
     few_shots_select="random_sampling",
-    generation_size=1,
-    metric=[Metrics.loglikelihood_acc],
-    stop_sequence=["\n"],
+    generation_size=32768,
+    metric=[
+        custom_metric.gpqa_instruct_pass_fr_at_1_1n,
+    ],
+    stop_sequence=[],
     trust_dataset=True,
     version=0,
 )
@@ -774,7 +776,7 @@ bbh_word_sorting_community = LightevalTaskConfig(
 # STORE YOUR EVALS
 TASKS_TABLE = [
     ifeval_fr_task,
-    gpqa_fr_task,
+    gpqa_diamond_fr_task,
     math_hard_fr_task,
     boolq_fr_task,
     mmlu_fr_task,

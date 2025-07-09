@@ -10,7 +10,7 @@ import nltk
 
 TASKS_REFS = {
     "ifeval-fr": "community|ifeval-fr|0|0",
-    "gpqa-fr": "community|gpqa-fr|0|0",
+    "gpqa-diamond-fr": "community|gpqa-diamond-fr|0|0",
     "bbh-fr": "community|bbh-fr|0|0",
     "boolq-fr": "community|boolq-fr|0|0",
     "mmlu-fr": "community|mmlu_fr|0|0",
@@ -56,12 +56,12 @@ def main(args):
     )
 
     generation_params = GenerationParameters(
-        temperature=0.0,  # Set temperature to 0 for deterministic outputs
+        temperature=args.temperature,  # Set temperature to 0 for deterministic outputs
     )
     model_config = VLLMModelConfig(
         model_name=args.model,
         dtype="bfloat16",
-        use_chat_template=False,
+        use_chat_template=True,
         generation_parameters=generation_params,
     )
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         nargs="+",
         choices=[
             "ifeval-fr",
-            "gpqa-fr",
+            "gpqa-diamond-fr",
             "bbh-fr",
             "boolq-fr",
             "mmlu-fr",
@@ -105,6 +105,12 @@ if __name__ == "__main__":
         type=str,
         default="Qwen/Qwen3-0.6B",
         help="Model name to use for evaluation.",
+    )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help="Temperature for model generation.",
     )
     args = parser.parse_args()
     main(args)
