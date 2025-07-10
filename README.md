@@ -37,25 +37,25 @@ $env:HF_TOKEN="your_hf_token"
 
 ## 3. Results
 
-| Evaluation               | Qwen3-0.6B   | Qwen2.5-0.5B-Instruct | LFM2-700M |
-|--------------------------|--------------|-----------------------|-----------|
-| IFEval-fr (strict prompt)|              |                       |           |
-| GPQA-Diamond-fr          |              |                       |           |
-| BoolQ-fr                 |              |  1.12                 |           |
-| Math-Hard-fr             |              |                       |           |
-| MMLU-fr                  |              |                       |           |
-| BBH-fr                   |              |                       |           |
-| MuSR-fr                  |              |                       |           |
+| Evaluation               | Qwen3-0.6B   | Qwen2.5-0.5B-Instruct |
+|--------------------------|--------------|-----------------------|
+| IFEval-fr (strict prompt)|              |  18.43                |
+| GPQA-Diamond-fr          |              |  35.84                |
+| BoolQ-fr                 |              |  0.00                 |
+| Math-Hard-fr             |              |  1.40                 |
+| MMLU-fr                  |              |  35.37                |
+| BBH-fr                   |              |  42.33                |
+| MuSR-fr                  |              |  37.49                |
 
-| Evaluation               | Qwen2.5-1.5B-Instruct | DeepSeek-R1-Distill-Qwen-1.5B | Qwen3-1.7B | LFM2-1.2B    |
-|--------------------------|--------------|-------------------------------|------------|--------------|
-| IFEval-fr (strict prompt)|              |                               |            |              |
-| GPQA-Diamond-fr          |              |                               |            |              |
-| BoolQ-fr                 |              |                               |            |              |
-| Math-Hard-fr             |              |                               |            |              |
-| MMLU-fr                  |              |                               |            |              |
-| BBH-fr                   |              |                               |            |              |
-| MuSR-fr                  |              |                               |            |              |
+| Evaluation               | Qwen2.5-1.5B-Instruct | DeepSeek-R1-Distill-Qwen-1.5B | Qwen3-1.7B |
+|--------------------------|-----------------------|-------------------------------|------------|
+| IFEval-fr (strict prompt)|    26.63              |                               |            |
+| GPQA-Diamond-fr          |    30.07              |                               |            |
+| BoolQ-fr                 |    70.39              |                               |            |
+| Math-Hard-fr             |    4.64               |                               |            |
+| MMLU-fr                  |    48,17              |                               |            |
+| BBH-fr                   |    47.57              |                               |            |
+| MuSR-fr                  |    37.47              |                               |            |
 
 ## 3. Resources:
 - [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)
