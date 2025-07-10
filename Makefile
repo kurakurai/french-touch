@@ -4,7 +4,7 @@ PYTHON               := uv run python
 EVAL_SCRIPT		:= src/eval/eval.py
 
 EVAL_TASKS ?= ifeval-fr
-EVAL_MODEL ?= Qwen/Qwen2.5-1.5B-Instruct
+EVAL_MODEL ?= Qwen/Qwen2.5-0.5B-Instruct
 
 .PHONY: env eval
 

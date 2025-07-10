@@ -3,7 +3,7 @@ from pathlib import Path
 from lighteval.logging.evaluation_tracker import EvaluationTracker
 from lighteval.models.vllm.vllm_model import VLLMModelConfig
 from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
-from lighteval.models.utils import GenerationParameters
+from model_params import MODEL_PARAMS
 import argparse
 import nltk
 
@@ -55,9 +55,10 @@ def main(args):
         custom_tasks_directory=tasks_path,
     )
 
-    generation_params = GenerationParameters(
-        temperature=args.temperature,  # Set temperature to 0 for deterministic outputs
-    )
+    generation_params = None
+    if args.model in MODEL_PARAMS:
+        generation_params = MODEL_PARAMS[args.model]
+
     model_config = VLLMModelConfig(
         model_name=args.model,
         dtype="bfloat16",
@@ -105,12 +106,6 @@ if __name__ == "__main__":
         type=str,
         default="Qwen/Qwen3-0.6B",
         help="Model name to use for evaluation.",
-    )
-    parser.add_argument(
-        "--temperature",
-        type=float,
-        default=0.0,
-        help="Temperature for model generation.",
     )
     args = parser.parse_args()
     main(args)

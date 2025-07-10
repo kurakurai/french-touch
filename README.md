@@ -31,24 +31,31 @@ $env:HF_TOKEN="your_hf_token"
 
 | Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
 |-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Evaluation French Benchmarks   | `make eval`       | `python run_eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval_fr`, `EVAL_MODEL=Qwen/Qwen2.5-1.5B-Instruct`                              |
+| Evaluation French Benchmarks   | `make eval`       | `python src/eval/eval.py --tasks EVAL_TASKS --model EVAL_MODEL`                                                                                 | `EVAL_TASKS=ifeval-fr`, `EVAL_MODEL=Qwen/Qwen2.5-1.5B-Instruct`                              |
 
 ⚠️ We use [Lighteval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
 
 ## 3. Results
 
-Parameters: `Temperature=0.0`
+| Evaluation               | Qwen3-0.6B   | Qwen2.5-0.5B-Instruct | LFM2-700M |
+|--------------------------|--------------|-----------------------|-----------|
+| IFEval-fr (strict prompt)|              |                       |           |
+| GPQA-Diamond-fr          |              |                       |           |
+| BoolQ-fr                 |              |  1.12                 |           |
+| Math-Hard-fr             |              |                       |           |
+| MMLU-fr                  |              |                       |           |
+| BBH-fr                   |              |                       |           |
+| MuSR-fr                  |              |                       |           |
 
-| Evaluation               | Qwen2.5-1.5B | 
-|--------------------------|--------------|
-| IFEval-fr (strict prompt)| 23.78        |
-| GPQA-Diamond-fr          | 29.02        |
-| BoolQ-fr                 | 69.3         | 
-| Math-Hard-fr             | 4.77         | 
-| MMLU-fr                  | 48.17        | 
-| BBH-fr                   | 49.64        | 
-| MuSR-fr                  | 37.47        | 
-
+| Evaluation               | Qwen2.5-1.5B-Instruct | DeepSeek-R1-Distill-Qwen-1.5B | Qwen3-1.7B | LFM2-1.2B    |
+|--------------------------|--------------|-------------------------------|------------|--------------|
+| IFEval-fr (strict prompt)|              |                               |            |              |
+| GPQA-Diamond-fr          |              |                               |            |              |
+| BoolQ-fr                 |              |                               |            |              |
+| Math-Hard-fr             |              |                               |            |              |
+| MMLU-fr                  |              |                               |            |              |
+| BBH-fr                   |              |                               |            |              |
+| MuSR-fr                  |              |                               |            |              |
 
 ## 3. Resources:
 - [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)
