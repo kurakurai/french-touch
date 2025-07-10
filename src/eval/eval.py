@@ -1,5 +1,15 @@
 import os
 from pathlib import Path
+import sys
+
+current_dir = os.path.dirname(__file__) 
+utils_path = os.path.abspath(os.path.join(current_dir, "..", "patch_lighteval"))
+sys.path.append(utils_path)
+
+from patch import patch_reasoning
+patch_reasoning()
+
+
 from lighteval.logging.evaluation_tracker import EvaluationTracker
 from lighteval.models.vllm.vllm_model import VLLMModelConfig
 from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
@@ -71,6 +81,7 @@ def main(args):
         pipeline_parameters=pipeline_params,
         evaluation_tracker=evaluation_tracker,
         model_config=model_config,
+        enable_thinking=True,  # Enable  or disable reasoning
     )
 
     pipeline.evaluate()
