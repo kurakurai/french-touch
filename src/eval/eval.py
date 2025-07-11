@@ -74,6 +74,8 @@ def main(args):
         dtype="bfloat16",
         use_chat_template=True,
         generation_parameters=generation_params,
+        gpu_memory_utilization=0.8
+
     )
 
     pipeline = Pipeline(
