@@ -1,10 +1,11 @@
 PYTHON_VERSION       := 3.10
 PYTHON               := uv run python
 
-EVAL_SCRIPT		:= src/eval/eval.py
+EVAL_SCRIPT          := src/eval/eval.py
 
-EVAL_TASKS ?= ifeval-fr
-EVAL_MODEL ?= Qwen/Qwen2.5-0.5B-Instruct
+EVAL_TASKS           ?= ifeval-fr
+EVAL_MODEL           ?= Qwen/Qwen3-0.6B
+ENABLE_THINKING      ?= 0
 
 .PHONY: env eval
 
@@ -21,3 +22,4 @@ eval:
 	$(PYTHON) $(EVAL_SCRIPT) \
 		--tasks $(EVAL_TASKS) \
 		--model $(EVAL_MODEL) \
+		$(if $(ENABLE_THINKING),--enable_thinking)\

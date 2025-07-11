@@ -7,7 +7,6 @@ from lighteval.metrics.utils.metric_utils import (
     MetricUseCase,
     SampleLevelMetric,
 )
-import numpy as np
 from lighteval.metrics.dynamic_metrics import (
     ExprExtractionConfig,
     IndicesExtractionConfig,
@@ -17,6 +16,7 @@ from lighteval.metrics.dynamic_metrics import (
     get_extraction_regexes,
     multilingual_extractive_match_metric,
 )
+import numpy as np
 
 # Metric for math-hard-fr task
 math_pass_fr_at_1_1n = SampleLevelMetric(

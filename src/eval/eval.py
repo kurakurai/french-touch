@@ -1,22 +1,18 @@
+import sys
 import os
-from pathlib import Path
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from patch_lighteval.patch import patch_reasoning
+
+patch_reasoning()
 from lighteval.logging.evaluation_tracker import EvaluationTracker
 from lighteval.models.vllm.vllm_model import VLLMModelConfig
 from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
-from model_params import MODEL_PARAMS
+from lighteval.models.utils import GenerationParameters
+from pathlib import Path
+from utils import MODEL_PARAMS, TASKS_REFS
 import argparse
 import nltk
-
-
-TASKS_REFS = {
-    "ifeval-fr": "community|ifeval-fr|0|0",
-    "gpqa-diamond-fr": "community|gpqa-diamond-fr|0|0",
-    "bbh-fr": "community|bbh-fr|0|0",
-    "boolq-fr": "community|boolq-fr|0|0",
-    "mmlu-fr": "community|mmlu_fr|0|0",
-    "musr-fr": "community|musr-fr|0|0",
-    "math-hard-fr": "community|math-hard-fr|0|0",  # 4 shots under the hood
-}
 
 
 def get_tasks(task_keys):
@@ -57,7 +53,7 @@ def main(args):
 
     generation_params = None
     if args.model in MODEL_PARAMS:
-        generation_params = MODEL_PARAMS[args.model]
+        generation_params = GenerationParameters(**MODEL_PARAMS[args.model])
 
     model_config = VLLMModelConfig(
         model_name=args.model,
@@ -71,6 +67,7 @@ def main(args):
         pipeline_parameters=pipeline_params,
         evaluation_tracker=evaluation_tracker,
         model_config=model_config,
+        enable_thinking=args.enable_thinking,  # Enable or disable reasoning (default is False)
     )
 
     pipeline.evaluate()
@@ -107,5 +104,12 @@ if __name__ == "__main__":
         default="Qwen/Qwen3-0.6B",
         help="Model name to use for evaluation.",
     )
+
+    parser.add_argument(
+        "--enable_thinking",
+        action="store_true",
+        help="Enable reasoning mode for the model.",
+    )
+
     args = parser.parse_args()
     main(args)
