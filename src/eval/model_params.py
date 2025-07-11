@@ -7,13 +7,6 @@ MODEL_PARAMS = {
         top_k=20,
         min_p=0.0,
     ),
-    "unsloth/Qwen3-0.6B-unsloth-bnb-4bit": GenerationParameters(  # Non-thinking mode
-        temperature=0.7,
-        top_p=0.8,
-        top_k=20,
-        min_p=0.0,
-    ),
-
     "Qwen/Qwen3-1.7B": GenerationParameters(  # Non-thinking mode
         temperature=0.7,
         top_p=0.8,

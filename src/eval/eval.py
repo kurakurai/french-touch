@@ -83,7 +83,7 @@ def main(args):
         pipeline_parameters=pipeline_params,
         evaluation_tracker=evaluation_tracker,
         model_config=model_config,
-        enable_thinking=True,  # Enable  or disable reasoning
+        enable_thinking=args.enable_thinking ,  # Enable  or disable reasoning (default is False)
     )
 
     pipeline.evaluate()
@@ -120,5 +120,11 @@ if __name__ == "__main__":
         default="Qwen/Qwen3-0.6B",
         help="Model name to use for evaluation.",
     )
+
+    parser.add_argument(
+        '--enable_thinking', 
+        action='store_true', 
+        help='Enable reasoning mode for the model.')
+
     args = parser.parse_args()
     main(args)
