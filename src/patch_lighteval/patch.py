@@ -54,7 +54,7 @@ def patch_reasoning():
 
             return prompt_init
         
-        def patch_pipeline():
+        def patch_pipeline(patched_create_requests_from_tasks):
             class_code = inspect.getsource(Pipeline)
             class_code = textwrap.dedent(class_code)
             
@@ -124,10 +124,12 @@ def patch_reasoning():
             class_code = class_code.replace(old_call, new_call)
             local_ns = {}
             class_globals = Pipeline.__init__.__globals__.copy()
+            # Add the patched create_requests_from_tasks to the globals
+            class_globals['create_requests_from_tasks'] = patched_create_requests_from_tasks
             exec(class_code, class_globals, local_ns)
             patched_class = local_ns['Pipeline']
 
-            return patched_class  
+            return patched_class
         
         def patch_create_requests_from_tasks():
             function = inspect.getsource(create_requests_from_tasks)
@@ -153,6 +155,7 @@ def patch_reasoning():
             return function
 
         # Patch the all necessary functions and classes
+        # First patch the PromptManager functions
         function_single_turn_context = patch_single_turn_context()
         original_function = getattr(PromptManager, '_single_turn_context')
         local_ns = {}
@@ -167,18 +170,22 @@ def patch_reasoning():
         PromptManager.__init__ = local_ns_init['__init__']
         sys.modules['lighteval.tasks.prompt_manager'].PromptManager.__init__ = PromptManager.__init__
 
+        # Then patch create_requests_from_tasks
         function_create_requests_from_tasks = patch_create_requests_from_tasks()
         local_ns = {}
         exec(function_create_requests_from_tasks, create_requests_from_tasks.__globals__, local_ns)
         patched_create_requests_from_tasks = local_ns['create_requests_from_tasks']
+        
+        # Apply the patched function to all relevant modules
         setattr(lighteval_task_module, 'create_requests_from_tasks', patched_create_requests_from_tasks)
         sys.modules['lighteval.tasks.lighteval_task'].create_requests_from_tasks = patched_create_requests_from_tasks
-
-        patched_pipeline = patch_pipeline()
-        pipeline_module.Pipeline = patched_pipeline
         pipeline_module.create_requests_from_tasks = patched_create_requests_from_tasks
-        sys.modules['lighteval.pipeline'].Pipeline = patched_pipeline
         sys.modules['lighteval.pipeline'].create_requests_from_tasks = patched_create_requests_from_tasks
+
+        # Finally patch the Pipeline class, passing the patched create_requests_from_tasks
+        patched_pipeline = patch_pipeline(patched_create_requests_from_tasks)
+        pipeline_module.Pipeline = patched_pipeline
+        sys.modules['lighteval.pipeline'].Pipeline = patched_pipeline
 
         print("Patching successful")
         
