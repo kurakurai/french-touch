@@ -2,6 +2,7 @@ from importlib import import_module
 import inspect
 import re
 import textwrap
+import sys
 
 def patch_reasoning():
     try:
@@ -120,8 +121,12 @@ def patch_reasoning():
             )
 
             class_code = class_code.replace(old_call, new_call)
-            
-            return class_code
+            local_ns = {}
+            class_globals = Pipeline.__init__.__globals__.copy()
+            exec(class_code, class_globals, local_ns)
+            patched_class = local_ns['Pipeline']
+
+            return patched_class  
         
         def patch_create_requests_from_tasks():
             function = inspect.getsource(create_requests_from_tasks)
@@ -152,25 +157,27 @@ def patch_reasoning():
         local_ns = {}
         exec(function_single_turn_context, original_function.__globals__, local_ns)
         PromptManager._single_turn_context = local_ns['_single_turn_context']
-        
+        sys.modules['lighteval.tasks.prompt_manager'].PromptManager._single_turn_context = PromptManager._single_turn_context
+
         function_init = patch_PromptManager_init()
         original_init = getattr(PromptManager, '__init__')
         local_ns_init = {}
         exec(function_init, original_init.__globals__, local_ns_init)
         PromptManager.__init__ = local_ns_init['__init__']
+        sys.modules['lighteval.tasks.prompt_manager'].PromptManager.__init__ = PromptManager.__init__
 
-        class_code = patch_pipeline()
-        local_ns = {}
-        class_globals = Pipeline.__init__.__globals__.copy()
-        exec(class_code, class_globals, local_ns)
-        patched_pipeline = local_ns['Pipeline']
-        setattr(pipeline_module, 'Pipeline', patched_pipeline)
+
+        patched_pipeline = patch_pipeline()
+        pipeline_module.Pipeline = patched_pipeline
+        sys.modules['lighteval.pipeline'].Pipeline = patched_pipeline
+
 
         function_create_requests_from_tasks = patch_create_requests_from_tasks()
         local_ns = {}
         exec(function_create_requests_from_tasks, create_requests_from_tasks.__globals__, local_ns)
         patched_create_requests_from_tasks = local_ns['create_requests_from_tasks']
         setattr(lighteval_task_module, 'create_requests_from_tasks', patched_create_requests_from_tasks)
+        sys.modules['lighteval.tasks.lighteval_task'].create_requests_from_tasks = patched_create_requests_from_tasks
 
     except Exception as e:
         raise RuntimeError(f"Failed to patch enable_thinking: {str(e)}")
