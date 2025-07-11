@@ -10,6 +10,7 @@ def patch_reasoning():
         pipeline_module = import_module('lighteval.pipeline')
         lighteval_task_module = import_module('lighteval.tasks.lighteval_task')
 
+
         create_requests_from_tasks = getattr(lighteval_task_module, 'create_requests_from_tasks', None)
         Pipeline = getattr(pipeline_module, 'Pipeline', None)
         PromptManager = getattr(prompt_manager_module, 'PromptManager', None)
@@ -166,12 +167,6 @@ def patch_reasoning():
         PromptManager.__init__ = local_ns_init['__init__']
         sys.modules['lighteval.tasks.prompt_manager'].PromptManager.__init__ = PromptManager.__init__
 
-
-        patched_pipeline = patch_pipeline()
-        pipeline_module.Pipeline = patched_pipeline
-        sys.modules['lighteval.pipeline'].Pipeline = patched_pipeline
-
-
         function_create_requests_from_tasks = patch_create_requests_from_tasks()
         local_ns = {}
         exec(function_create_requests_from_tasks, create_requests_from_tasks.__globals__, local_ns)
@@ -179,6 +174,14 @@ def patch_reasoning():
         setattr(lighteval_task_module, 'create_requests_from_tasks', patched_create_requests_from_tasks)
         sys.modules['lighteval.tasks.lighteval_task'].create_requests_from_tasks = patched_create_requests_from_tasks
 
+        patched_pipeline = patch_pipeline()
+        pipeline_module.Pipeline = patched_pipeline
+        pipeline_module.create_requests_from_tasks = patched_create_requests_from_tasks
+        sys.modules['lighteval.pipeline'].Pipeline = patched_pipeline
+        sys.modules['lighteval.pipeline'].create_requests_from_tasks = patched_create_requests_from_tasks
+
+        print("Patching successful")
+        
     except Exception as e:
         raise RuntimeError(f"Failed to patch enable_thinking: {str(e)}")
         
