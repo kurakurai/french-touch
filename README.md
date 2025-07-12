@@ -1,6 +1,6 @@
-# Luth: French Small Language Model
+# Luth: Small French Language Model
 
-Building a good French Small Language Model.
+Building a Small French Language Model.
 
 ## 1. Quick Setup
 

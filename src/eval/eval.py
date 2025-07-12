@@ -67,7 +67,7 @@ def main(args):
         pipeline_parameters=pipeline_params,
         evaluation_tracker=evaluation_tracker,
         model_config=model_config,
-        enable_thinking=False,  # Enable or disable reasoning (default is False)
+        enable_thinking=args.enable_thinking,  # Enable or disable reasoning (default is False)
     )
 
     pipeline.evaluate()
