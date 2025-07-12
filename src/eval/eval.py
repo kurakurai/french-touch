@@ -52,15 +52,18 @@ def main(args):
         use_chat_template=True,  # Set false for base models
     )
 
-    generation_params = None
-    if args.model in MODEL_PARAMS:
-        generation_params = GenerationParameters(**MODEL_PARAMS[args.model])
+    config_kwargs = {
+        "model_name": args.model,
+        "dtype": "bfloat16",
+        "use_chat_template": True,
+    }
 
-    model_config = VLLMModelConfig(
-        model_name=args.model,
-        dtype="bfloat16",
-        generation_parameters=generation_params,
-    )
+    if args.model in MODEL_PARAMS:
+        config_kwargs["generation_parameters"] = GenerationParameters(
+            **MODEL_PARAMS[args.model]
+        )
+
+    model_config = VLLMModelConfig(**config_kwargs)
 
     pipeline = Pipeline(
         tasks=get_tasks(args.tasks),
