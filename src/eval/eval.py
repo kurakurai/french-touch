@@ -49,18 +49,21 @@ def main(args):
     pipeline_params = PipelineParameters(
         launcher_type=ParallelismManager.VLLM,
         custom_tasks_directory=tasks_path,
+        use_chat_template=True,  # Set false for base models
     )
 
-    generation_params = None
+    config_kwargs = {
+        "model_name": args.model,
+        "dtype": "bfloat16",
+        "use_chat_template": True,
+    }
+
     if args.model in MODEL_PARAMS:
-        generation_params = GenerationParameters(**MODEL_PARAMS[args.model])
+        config_kwargs["generation_parameters"] = GenerationParameters(
+            **MODEL_PARAMS[args.model]
+        )
 
-    model_config = VLLMModelConfig(
-        model_name=args.model,
-        dtype="bfloat16",
-        use_chat_template=True,
-        generation_parameters=generation_params,
-    )
+    model_config = VLLMModelConfig(**config_kwargs)
 
     pipeline = Pipeline(
         tasks=get_tasks(args.tasks),
@@ -95,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="./results_evals",
+        default="./results",
         help="Directory to save evaluation results.",
     )
     parser.add_argument(

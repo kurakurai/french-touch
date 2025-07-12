@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "french-slm"
+name = "Luth"
 version = "0.1.0"
-description = "French SLM."
+description = "Luth: Small French Language Model"
 authors = [
   {name = "KuraKura AI"},
 ]

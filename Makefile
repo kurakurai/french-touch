@@ -5,7 +5,7 @@ EVAL_SCRIPT          := src/eval/eval.py
 
 EVAL_TASKS           ?= ifeval-fr
 EVAL_MODEL           ?= Qwen/Qwen3-0.6B
-ENABLE_THINKING      ?= 0
+ENABLE_THINKING      ?= 1
 
 .PHONY: env eval
 
@@ -22,4 +22,5 @@ eval:
 	$(PYTHON) $(EVAL_SCRIPT) \
 		--tasks $(EVAL_TASKS) \
 		--model $(EVAL_MODEL) \
-		$(if $(ENABLE_THINKING),--enable_thinking)\
+		$(if $(filter 1,$(ENABLE_THINKING)),--enable_thinking)
+
