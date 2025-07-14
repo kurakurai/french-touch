@@ -29,25 +29,18 @@ def get_tasks(task_keys):
     return ",".join(tasks)
 
 
-def display_avg_metrics(all_results):
+def display_avg_metrics(results):
     """Calculate and display average metrics across multiple runs."""
-    other_keys = [k for k in all_results[0].keys() if k != "all"]
+    all_keys = results["all"].keys()
+    base_keys = sorted([k for k in all_keys if not k.endswith("_stderr")])
 
-    print(f"\nAVERAGE RESULTS ACROSS {len(all_results)} RUNS:")
-    print("=" * 50)
+    print(f"\nAVERAGE RESULTS ACROSS {len(results)} RUNS:")
+    print("-" * 40)
 
-    for section in other_keys:
-        print(f"\n>>> {section.upper()}")
-        print("-" * 50)
-        section_keys = all_results[0][section].keys()
-        base_keys = sorted([k for k in section_keys if not k.endswith("_stderr")])
-
-        for key in base_keys:
-            values = [result[section][key] for result in all_results]
-            stderrs = [result[section][f"{key}_stderr"] for result in all_results]
-            mean = np.mean(values)
-            avg_stderr = np.mean(stderrs)
-            print(f"{key}: {mean:.4f} ± {avg_stderr:.4f} = {mean + avg_stderr:.4f}")
+    for key in base_keys:
+        mean = results["all"][key]
+        stderr = results["all"].get(f"{key}_stderr", 0.0)
+        print(f"{key}: {mean:.4f} ± {stderr:.4f} = {mean + stderr:.4f}")
 
 
 def main(args):
@@ -80,14 +73,15 @@ def main(args):
         custom_tasks_directory=tasks_path,
         use_chat_template=True,  # Set false for base models
     )
+
     tasks = get_tasks(args.tasks)
+
     evaluation_tracker = EvaluationTracker(
         output_dir=args.output_dir,
         save_details=True,
         push_to_hub=False,
     )
 
-    all_results = []
     for _ in range(args.num_runs):
         pipeline = Pipeline(
             tasks=tasks,
@@ -97,15 +91,18 @@ def main(args):
             enable_thinking=args.enable_thinking,  # Enable or disable reasoning (default is False)
         )
         pipeline.evaluate()
-        all_results.append(
+        if len(args.tasks) > 1:
+            print(f"num_runs > 1 isn't supported for multiple tasks.")
+            break
+
+    pipeline.save_and_push_results()
+    pipeline.show_results()
+
+    # Calculate average metrics across all runs for a single task
+    if len(args.tasks) <= 1 and args.num_runs > 1:
+        display_avg_metrics(
             pipeline.evaluation_tracker.metrics_logger.metric_aggregated.copy()
         )
-        pipeline.save_and_push_results()
-        pipeline.show_results()
-
-    # Calculate average metrics across all runs
-    if args.num_runs > 1:
-        display_avg_metrics(all_results)
 
 
 if __name__ == "__main__":
@@ -147,8 +144,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_runs",
         type=int,
-        default=2,
-        help="Number of times to run each task.",
+        default=1,
+        help="Number of times to run each task.",  # Only works for a single task at at time
     )
     args = parser.parse_args()
     main(args)
