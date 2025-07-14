@@ -2,6 +2,7 @@ TASKS_REFS = {
     "ifeval-fr": "community|ifeval-fr|0|0",
     "gpqa-diamond-fr": "community|gpqa-diamond-fr|0|0",
     "bbh-fr": "community|bbh-fr|0|0",
+    "hellaswag-fr": "community|hellaswag-fr|0|0",
     "boolq-fr": "community|boolq-fr|0|0",
     "mmlu-fr": "community|mmlu_fr|0|0",
     "musr-fr": "community|musr-fr|0|0",

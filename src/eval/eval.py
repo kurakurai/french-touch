@@ -13,6 +13,7 @@ from pathlib import Path
 from utils import MODEL_PARAMS, TASKS_REFS
 import argparse
 import nltk
+import numpy as np
 
 
 def get_tasks(task_keys):
@@ -28,6 +29,22 @@ def get_tasks(task_keys):
     return ",".join(tasks)
 
 
+def display_avg_metrics(all_results):
+    """Calculate and display average metrics across multiple runs."""
+    all_keys = all_results[0]["all"].keys()
+    base_keys = sorted([k for k in all_keys if not k.endswith("_stderr")])
+
+    print(f"\nAVERAGE RESULTS ACROSS {len(all_results)} RUNS:")
+    print("-" * 40)
+
+    for key in base_keys:
+        values = [result["all"][key] for result in all_results]
+        stderrs = [result["all"][f"{key}_stderr"] for result in all_results]
+        mean = np.mean(values)
+        avg_stderr = np.mean(stderrs)
+        print(f"{key}: {mean:.4f} ± {avg_stderr:.4f} = {mean + avg_stderr:.4f}")
+
+
 def main(args):
     """
     Main function to run the evaluation pipeline with vLLM backend.
@@ -39,18 +56,6 @@ def main(args):
         nltk.download("punkt_tab")
 
     tasks_path = Path(f"src/eval/tasks.py")
-
-    evaluation_tracker = EvaluationTracker(
-        output_dir=args.output_dir,
-        save_details=True,
-        push_to_hub=False,
-    )
-
-    pipeline_params = PipelineParameters(
-        launcher_type=ParallelismManager.VLLM,
-        custom_tasks_directory=tasks_path,
-        use_chat_template=True,  # Set false for base models
-    )
 
     config_kwargs = {
         "model_name": args.model,
@@ -65,17 +70,38 @@ def main(args):
 
     model_config = VLLMModelConfig(**config_kwargs)
 
-    pipeline = Pipeline(
-        tasks=get_tasks(args.tasks),
-        pipeline_parameters=pipeline_params,
-        evaluation_tracker=evaluation_tracker,
-        model_config=model_config,
-        enable_thinking=args.enable_thinking,  # Enable or disable reasoning (default is False)
+    pipeline_params = PipelineParameters(
+        launcher_type=ParallelismManager.VLLM,
+        custom_tasks_directory=tasks_path,
+        use_chat_template=True,  # Set false for base models
+        max_samples=50,
+    )
+    tasks = get_tasks(args.tasks)
+    evaluation_tracker = EvaluationTracker(
+        output_dir=args.output_dir,
+        save_details=True,
+        push_to_hub=False,
     )
 
-    pipeline.evaluate()
-    pipeline.save_and_push_results()
-    pipeline.show_results()
+    all_results = []
+    for _ in range(args.num_runs):
+        pipeline = Pipeline(
+            tasks=tasks,
+            pipeline_parameters=pipeline_params,
+            evaluation_tracker=evaluation_tracker,
+            model_config=model_config,
+            enable_thinking=args.enable_thinking,  # Enable or disable reasoning (default is False)
+        )
+        pipeline.evaluate()
+        all_results.append(
+            pipeline.evaluation_tracker.metrics_logger.metric_aggregated.copy()
+        )
+        pipeline.save_and_push_results()
+        pipeline.show_results()
+
+    # Calculate average metrics across all runs
+    if args.num_runs > 1:
+        display_avg_metrics(all_results)
 
 
 if __name__ == "__main__":
@@ -91,6 +117,7 @@ if __name__ == "__main__":
             "mmlu-fr",
             "musr-fr",
             "math-hard-fr",
+            "hellaswag-fr",
         ],
         required=True,
         help="Tasks to evaluate the model.",
@@ -113,6 +140,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Enable reasoning mode for the model.",
     )
-
+    parser.add_argument(
+        "--num_runs",
+        type=int,
+        default=1,
+        help="Number of times to run each task.",
+    )
     args = parser.parse_args()
     main(args)

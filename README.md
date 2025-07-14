@@ -20,7 +20,7 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
-Currently supports: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`
+Currently supports: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`, `Hellaswag-fr`
 
 ```bash
 # Linux/MacOS
@@ -39,24 +39,21 @@ $env:HF_TOKEN="your_hf_token"
 
 | Evaluation               | Qwen3-0.6B   | Qwen2.5-0.5B-Instruct |
 |--------------------------|--------------|-----------------------|
-| IFEval-fr (strict prompt)|              |  18.43                |
-| GPQA-Diamond-fr          |              |  35.84                |
-| BoolQ-fr                 |              |  0.00                 |
-| Math-Hard-fr             |              |  1.40                 |
-| MMLU-fr                  |              |  35.37                |
-| BBH-fr                   |              |  42.33                |
-| MuSR-fr                  |              |  37.49                |
+| IFEval-fr (strict prompt)|              |                  |
+| GPQA-Diamond-fr          |              |                  |
+| BoolQ-fr                 |              |                   |
+| Math-Hard-fr             |              |                  |
+| MMLU-fr                  |              |                  |
+| BBH-fr                   |              |                  |
+| MuSR-fr                  |              |                  |
 
 | Evaluation               | Qwen2.5-1.5B-Instruct | DeepSeek-R1-Distill-Qwen-1.5B | Qwen3-1.7B |
 |--------------------------|-----------------------|-------------------------------|------------|
-| IFEval-fr (strict prompt)|    26.63              |                               |            |
-| GPQA-Diamond-fr          |    30.07              |                               |            |
-| BoolQ-fr                 |    70.39              |                               |            |
-| Math-Hard-fr             |    4.64               |                               |            |
-| MMLU-fr                  |    48,17              |                               |            |
-| BBH-fr                   |    47.57              |                               |            |
-| MuSR-fr                  |    37.47              |                               |            |
+| IFEval-fr (strict prompt)|                  |                               |            |
+| GPQA-Diamond-fr          |                  |                               |            |
+| BoolQ-fr                 |                  |                               |            |
+| Math-Hard-fr             |                   |                               |            |
+| MMLU-fr                  |                  |                               |            |
+| BBH-fr                   |                  |                               |            |
+| MuSR-fr                  |                  |                               |            |
 
-## 3. Resources:
-- [French LLM Leaderboard](https://huggingface.co/spaces/fr-gouv-coordination-ia/llm_leaderboard_fr#/)
-- [OpenLLMFrenchLeadboard Dataset (not official datasets)](https://huggingface.co/collections/le-leadboard/openllmfrenchleadboard-jeu-de-donnees-67126437539a23c65554fd88)
