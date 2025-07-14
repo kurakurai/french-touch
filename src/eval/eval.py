@@ -31,18 +31,23 @@ def get_tasks(task_keys):
 
 def display_avg_metrics(all_results):
     """Calculate and display average metrics across multiple runs."""
-    all_keys = all_results[0]["all"].keys()
-    base_keys = sorted([k for k in all_keys if not k.endswith("_stderr")])
+    other_keys = [k for k in all_results[0].keys() if k != "all"]
 
     print(f"\nAVERAGE RESULTS ACROSS {len(all_results)} RUNS:")
-    print("-" * 40)
+    print("=" * 50)
 
-    for key in base_keys:
-        values = [result["all"][key] for result in all_results]
-        stderrs = [result["all"][f"{key}_stderr"] for result in all_results]
-        mean = np.mean(values)
-        avg_stderr = np.mean(stderrs)
-        print(f"{key}: {mean:.4f} ± {avg_stderr:.4f} = {mean + avg_stderr:.4f}")
+    for section in other_keys:
+        print(f"\n>>> {section.upper()}")
+        print("-" * 50)
+        section_keys = all_results[0][section].keys()
+        base_keys = sorted([k for k in section_keys if not k.endswith("_stderr")])
+
+        for key in base_keys:
+            values = [result[section][key] for result in all_results]
+            stderrs = [result[section][f"{key}_stderr"] for result in all_results]
+            mean = np.mean(values)
+            avg_stderr = np.mean(stderrs)
+            print(f"{key}: {mean:.4f} ± {avg_stderr:.4f} = {mean + avg_stderr:.4f}")
 
 
 def main(args):
@@ -74,7 +79,6 @@ def main(args):
         launcher_type=ParallelismManager.VLLM,
         custom_tasks_directory=tasks_path,
         use_chat_template=True,  # Set false for base models
-        max_samples=50,
     )
     tasks = get_tasks(args.tasks)
     evaluation_tracker = EvaluationTracker(
@@ -143,7 +147,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_runs",
         type=int,
-        default=1,
+        default=2,
         help="Number of times to run each task.",
     )
     args = parser.parse_args()
