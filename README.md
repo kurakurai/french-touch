@@ -20,7 +20,7 @@ source $HOME/.local/bin/env
 
 ## 2. Evaluation
 
-Currently supports: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`, `Hellaswag-fr`
+Custom French evals supported: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`, `Hellaswag-fr`
 
 ```bash
 # Linux/MacOS
@@ -31,29 +31,6 @@ $env:HF_TOKEN="your_hf_token"
 
 | Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
 |-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Evaluation French Benchmarks   | `make eval`       | `python src/eval/eval.py --tasks EVAL_TASKS --model EVAL_MODEL --enable_thinking`                                                                                 | `EVAL_TASKS=ifeval-fr`, `EVAL_MODEL=Qwen/Qwen3-0.6B`,     `ENABLE_THINKING=1`                     |
+| Evaluation French Benchmarks   | `make eval`       | `python src/eval/eval.py --config EVAL_CONFIG`                                                                                 | `EVAL_CONFIG=configs/eval_config.yaml`                     |
 
-⚠️ We use [Lighteval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
-
-## 3. Results
-
-| Evaluation               | Qwen3-0.6B   | Qwen2.5-0.5B-Instruct |
-|--------------------------|--------------|-----------------------|
-| IFEval-fr (strict prompt)|              |                  |
-| GPQA-Diamond-fr          |              |                  |
-| BoolQ-fr                 |              |                   |
-| Math-Hard-fr             |              |                  |
-| MMLU-fr                  |              |                  |
-| BBH-fr                   |              |                  |
-| MuSR-fr                  |              |                  |
-
-| Evaluation               | Qwen2.5-1.5B-Instruct | DeepSeek-R1-Distill-Qwen-1.5B | Qwen3-1.7B |
-|--------------------------|-----------------------|-------------------------------|------------|
-| IFEval-fr (strict prompt)|                  |                               |            |
-| GPQA-Diamond-fr          |                  |                               |            |
-| BoolQ-fr                 |                  |                               |            |
-| Math-Hard-fr             |                   |                               |            |
-| MMLU-fr                  |                  |                               |            |
-| BBH-fr                   |                  |                               |            |
-| MuSR-fr                  |                  |                               |            |
-
+⚠️ We use [LightEval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
