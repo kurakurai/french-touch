@@ -10,6 +10,7 @@ model_parameters:
 
 extras:
   enable_thinking: true
+  answer_token: "" # for reasoning tasks we need to specify the answer token like <answer>
   use_chat_template: true
   num_runs: 1
   output_dir: "results/"
