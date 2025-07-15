@@ -36,7 +36,6 @@ def patch_reasoning():
             )
 
             function = function.replace(old_code, new_code)
-            print(function)
             return function
 
         def patch_PromptManager_init():
@@ -216,5 +215,3 @@ def patch_reasoning():
     except Exception as e:
         raise RuntimeError(f"Failed to patch enable_thinking: {str(e)}")
 
-
-#patch_reasoning()
