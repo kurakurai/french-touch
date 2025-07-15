@@ -52,6 +52,25 @@ def gpqa_diamond_fr_instruct(line, task_name: str = None):
     )
 
 
+# hellaswag-fr prompt function
+def prompt_hellaswag_fr(line, task_name: str = None):
+    query = "Voici une série de questions à choix multiples (avec réponses) pour évaluer le bon sens.\n\n"
+    query += f"Question: {line['ctx_a']} {line['ctx_b'].capitalize()}\n"
+    query += "".join(
+        [f"{key}. {choice}\n" for key, choice in zip(LETTER_INDICES, line["endings"])]
+    )
+    query += "Réponse:"
+
+    gold_ix = int(line["label"]) if line["label"] != "" else -1
+    return Doc(
+        task_name=task_name,
+        query=query,
+        choices=[" " + i for i in LETTER_INDICES[: len(line["endings"])]],
+        gold_index=gold_ix,  # -1 pour le test
+        instruction="Voici une série de questions à choix multiples (avec réponses) pour évaluer le bon sens.\n\n",
+    )
+
+
 # boolq-fr prompt function
 def prompt_boolq_fr(line, task_name: str = None):
     question = (

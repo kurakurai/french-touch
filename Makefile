@@ -3,9 +3,7 @@ PYTHON               := uv run python
 
 EVAL_SCRIPT          := src/eval/eval.py
 
-EVAL_TASKS           ?= ifeval-fr
-EVAL_MODEL           ?= Qwen/Qwen3-0.6B
-ENABLE_THINKING      ?= 0
+EVAL_CONFIG          ?= configs/eval_config.yaml
 
 .PHONY: env eval
 
@@ -20,6 +18,5 @@ env:
 
 eval:
 	$(PYTHON) $(EVAL_SCRIPT) \
-		--tasks $(EVAL_TASKS) \
-		--model $(EVAL_MODEL) \
-		$(if $(ENABLE_THINKING),--enable_thinking)\
+		--config $(EVAL_CONFIG) \
+

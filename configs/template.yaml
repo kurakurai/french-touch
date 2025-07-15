@@ -1,0 +1,25 @@
+model:
+  model_name: "Qwen/Qwen3-0.6B"
+  dtype: "bfloat16"
+
+model_parameters:
+  temperature: 0.7
+  top_k: 50
+  top_p: 0.9
+  min_p: 0.0
+
+extras:
+  enable_thinking: true
+  use_chat_template: true
+  num_runs: 1
+  output_dir: "results/"
+
+tasks:
+  - "community|ifeval-fr|0|1"
+  - "community|gpqa-diamond-fr|0|1"
+  - "community|bbh-fr|0|1"
+  - "community|hellaswag-fr|0|1"
+  - "community|boolq-fr|0|1"
+  - "community|mmlu_fr|0|1"
+  - "community|musr-fr|0|1"
+  - "community|math-hard-fr|0|1"

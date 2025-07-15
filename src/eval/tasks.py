@@ -27,7 +27,7 @@ ifeval_fr_task = LightevalTaskConfig(
     hf_avail_splits=["train"],
     evaluation_splits=["train"],
     few_shots_split="train",
-    few_shots_select="random_sampling",
+    few_shots_select="random",
     generation_size=1280,
     stop_sequence=[],  # no stop sequence, will use eot token
     version="0.1",
@@ -43,14 +43,37 @@ gpqa_diamond_fr_task = LightevalTaskConfig(
     hf_avail_splits=["train"],
     evaluation_splits=["train"],
     few_shots_split="train",
-    few_shots_select="random_sampling",
-    generation_size=2048,
+    few_shots_select="random",
+    generation_size=4096,
     metric=[
         custom_metric.gpqa_instruct_pass_fr_at_1_1n,
     ],
     stop_sequence=[],
     trust_dataset=True,
     version=1,
+)
+
+# Hellaswag-fr task
+hellaswag_fr_task = LightevalTaskConfig(
+    name="hellaswag-fr",
+    suite=["community"],
+    prompt_function=custom_prompt.prompt_hellaswag_fr,
+    hf_repo="manu/french_bench_hellaswag",
+    hf_subset="default",
+    hf_avail_splits=["validation"],
+    evaluation_splits=["validation"],
+    few_shots_split="train",
+    few_shots_select="random",
+    generation_size=1,
+    metric=[
+        Metrics.exact_match,
+        Metrics.quasi_exact_match,
+        Metrics.prefix_exact_match,
+        Metrics.prefix_quasi_exact_match,
+    ],
+    stop_sequence=["\n"],
+    trust_dataset=True,
+    version=0,
 )
 
 
@@ -810,4 +833,5 @@ TASKS_TABLE = [
     bbh_tracking_shuffled_objects_three_objects_community,
     bbh_web_of_lies_community,
     bbh_word_sorting_community,
+    hellaswag_fr_task,
 ]

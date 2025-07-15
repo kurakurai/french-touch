@@ -25,18 +25,17 @@ def patch_reasoning():
 
             old_code = (
                 "return self.model.tokenizer.apply_chat_template(\n"
-                "                output, tokenize=False, add_generation_prompt=True\n"
-                "            ), num_effective_fewshots"
+                "            output, tokenize=False, add_generation_prompt=True\n"
+                "        ), num_effective_fewshots"
             )
 
             new_code = (
                 "return self.model.tokenizer.apply_chat_template(\n"
-                "                output, tokenize=False, add_generation_prompt=True, enable_thinking=self.enable_thinking\n"
-                "            ), num_effective_fewshots"
+                "            output, tokenize=False, add_generation_prompt=True, enable_thinking=self.enable_thinking\n"
+                "        ), num_effective_fewshots"
             )
 
             function = function.replace(old_code, new_code)
-
             return function
 
         def patch_PromptManager_init():
@@ -215,3 +214,4 @@ def patch_reasoning():
 
     except Exception as e:
         raise RuntimeError(f"Failed to patch enable_thinking: {str(e)}")
+
