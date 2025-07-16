@@ -1,6 +1,7 @@
 from lighteval.metrics.metrics_sample import ExactMatches
-
-
+import re
+from typing import Callable
+import os
 
 class ExactMatchesThinking(ExactMatches):
     """
@@ -15,7 +16,7 @@ class ExactMatchesThinking(ExactMatches):
         normalize_pred: Callable[[str], str] | None = None,
         strip_strings: bool = False,
         type_exact_match: str = "full",
-        answer_token: str = "",  # for reasoning tasks we need to specify the answer token like <answer> or end of thinking token "</thinking>" if no asnwer token is outputted
+        answer_token: str = os.environ.get("answer_token", ""),  # for reasoning tasks we need to specify the answer token like <answer> or end of thinking token "</thinking>" if no asnwer token is outputted
     ):
 
         super().__init__(
@@ -33,6 +34,10 @@ class ExactMatchesThinking(ExactMatches):
         gold: str,
         pred: str,
     ) -> float:
-        if not self.answer_token:
-            return super().compute_one_item(gold, pred)
-        
+        print("working")
+        #extract the answer afte the answer token if it exists
+        if self.answer_token:
+            if self.answer_token in pred:
+                pred = pred.split(self.answer_token, 1)[1]
+
+        return super().compute_one_item(gold, pred)
