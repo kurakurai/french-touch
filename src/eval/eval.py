@@ -68,6 +68,7 @@ def main(args):
         launcher_type=ParallelismManager.VLLM,
         custom_tasks_directory=tasks_path,
         use_chat_template=extras_yaml.get("use_chat_template", True),
+        system_prompt=extras_yaml.get("system_prompt", ""),
     )
 
     # Get the tasks to evaluate
@@ -90,7 +91,7 @@ def main(args):
             enable_thinking=extras_yaml.get("enable_thinking", False),
         )
         pipeline.evaluate()
-        if len(tasks_yaml) > 1:
+        if len(tasks_yaml) > 1 and extras_yaml.get("num_runs", 1) > 1:
             print(f"num_runs > 1 isn't supported for multiple tasks.")
             break
 

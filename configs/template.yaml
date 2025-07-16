@@ -11,8 +11,11 @@ model_parameters:
 extras:
   enable_thinking: true
   use_chat_template: true
+  system_prompt: "Vous êtes un assistant utile."
   num_runs: 1
   output_dir: "results/"
+  save_details: true
+  push_to_hub: false
 
 tasks:
   - "community|ifeval-fr|0|1"
@@ -22,4 +25,4 @@ tasks:
   - "community|boolq-fr|0|1"
   - "community|mmlu_fr|0|1"
   - "community|musr-fr|0|1"
-  - "community|math-hard-fr|0|1"
+  - "community|math-hard-fr|0|1" # 4 shots under the hood
