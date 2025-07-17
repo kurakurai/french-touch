@@ -8,25 +8,22 @@ _Using [`uv`](https://github.com/astral-sh/uv) for fast and reliable dependency 
 
 ```bash
 # Basic environment setup
-make env
+make env-eval   # Set up environment with evaluation dependencies
+make env-train  # Set up environment with training dependencies
+make clean      # Delete all .venv
 ```
 That's it, you can now run any command you want!
-
-⚠️ You might need to perform the following two steps manually before running `make env`:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env
-```
 
 ## 2. Evaluation
 
 Custom French evals supported: `IFEval-fr`, `GPQA-Diamond-fr`, `BBH-fr`, `Math-HARD-fr`, `BoolQ-fr`, `MMLU-fr`, `MuSR-fr`, `Hellaswag-fr`
 
+You can modify the evaluation configuration in the `eval_config.yaml` file.
 ```bash
-# Linux/MacOS
-export HF_TOKEN=your_hf_token
-# Windows
-$env:HF_TOKEN="your_hf_token"
+# To run the CLI commands
+make env-eval
+source .venv-eval/bin/activate
+python src/eval/eval.py --config 'configs/eval/eval_config.yaml'
 ```
 
 | Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
@@ -35,9 +32,26 @@ $env:HF_TOKEN="your_hf_token"
 
 ⚠️ We use [LightEval](https://github.com/huggingface/lighteval) and [vLLM](https://github.com/vllm-project/vllm) for evaluation.
 
-## 3. Results
+## 3. Training
 
-### 3.1 Non-Thinking mode
+You can modify the training configuration in the `sft_config.yaml` file.
+
+```bash
+# To run the CLI commands
+make env-train
+source .venv-train/bin/activate
+python src/train/sft.py --config 'configs/train/sft_config.yaml'
+```
+
+| Task        | Make Command       | Equivalent CLI Command                                                                                                                                               | Default Values                                                                 |
+|-------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| Run SFT   | `make sft`       | `python src/train/sft.py --config SFT_CONFIG`                                                                                 | `SFT_CONFIG=configs/train/sft_config.yaml`                     |
+
+⚠️ We use [Axolotl](https://github.com/axolotl-ai-cloud/axolotl) for training.
+
+## 4. Results
+
+### 4.1 Non-Thinking mode
 
 | Benchmark                 | Qwen3-0.6B | Qwen2.5-0.5B-Instruct | SmolLM2-360M-Instruct |  LFM2-700M   |  LFM2-350M   |
 |---------------------------|------------|-----------------------|-----------------------|--------------|--------------|

@@ -9,6 +9,8 @@ results_evals/
 test.py
 results/
 checkpoints/
+.venv-train/
+.venv-eval/
 
 # C extensions
 *.so
