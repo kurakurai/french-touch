@@ -1,11 +1,13 @@
-PYTHON_VERSION       := 3.10
+PYTHON_VERSION       := 3.11
 PYTHON               := uv run python
 
 EVAL_SCRIPT          := src/eval/eval.py
+SFT_SCRIPT           := src/train/sft.py
 
-EVAL_CONFIG          ?= configs/eval_config.yaml
+EVAL_CONFIG          ?= configs/eval/eval_config.yaml
+SFT_CONFIG           ?= configs/train/sft_config.yaml
 
-.PHONY: env eval
+.PHONY: env eval sft
 
 env:
 	@command -v uv >/dev/null 2>&1 || { \
@@ -20,3 +22,6 @@ eval:
 	$(PYTHON) $(EVAL_SCRIPT) \
 		--config $(EVAL_CONFIG) \
 
+sft: env
+	$(PYTHON) $(SFT_SCRIPT) \
+		--config $(SFT_CONFIG) \

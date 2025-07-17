@@ -8,6 +8,7 @@ uv.lock
 results_evals/
 test.py
 results/
+checkpoints/
 
 # C extensions
 *.so

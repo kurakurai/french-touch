@@ -13,6 +13,11 @@ from pathlib import Path
 import argparse
 import nltk
 import yaml
+import logging
+
+# Set the root logger to only show INFO and above
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("vllm").setLevel(logging.INFO)
 
 
 def get_tasks(task_keys):
