@@ -1,0 +1,28 @@
+base_model: "Qwen/Qwen3-0.6B"
+deepspeed: configs/train/zero1.json # Multi-GPU training config (deepspeed)
+sample_packing: true
+chunked_cross_entropy: true
+learning_rate: 0.00001
+sequence_len: 16384
+micro_batch_size: 1
+gradient_accumulation_steps: 2
+gradient_checkpointing: true
+optimizer: "adamw_torch_8bit"
+lr_scheduler: "cosine"
+warmup_ratio: 0.2
+float16: false
+bf16: true
+max_grad_norm: 0.1
+num_epochs: 3
+saves_per_epoch: 1
+logging_steps: 5
+chat_template: "tokenizer_default"
+datasets:
+  - path: "<dataset_id>"
+    type: "chat_template"
+    split: "train"
+eot_tokens:
+  - "<|im_end|>"
+dataloader_prefetch_factor: 8
+dataloader_num_workers: 2
+dataloader_pin_memory: true
