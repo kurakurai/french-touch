@@ -10,7 +10,6 @@ def prompt_ifeval_fr(line, task_name: str = None):
         query=line["prompt"],
         choices=[""],
         gold_index=0,
-        instruction="",
         specific={
             "instructions_id_list": line["instruction_id_list"],
             "kwargs": line["kwargs"],
@@ -48,7 +47,6 @@ def gpqa_diamond_fr_instruct(line, task_name: str = None):
         query=query,
         choices=LETTER_INDICES[: len(choices)],
         gold_index=gold_index,
-        instruction=query,
     )
 
 
@@ -67,7 +65,6 @@ def prompt_hellaswag_fr(line, task_name: str = None):
         query=query,
         choices=[" " + i for i in LETTER_INDICES[: len(line["endings"])]],
         gold_index=gold_ix,  # -1 pour le test
-        instruction="Voici une série de questions à choix multiples (avec réponses) pour évaluer le bon sens.\n\n",
     )
 
 
@@ -91,7 +88,6 @@ def bbh(line, instruction, choices, task_name: str = None):
         query=f"{instruction}Q: {line['input']}\nA:",
         choices=choices,
         gold_index=choices.index(line["target"]),
-        instruction=instruction,
     )
 
 
@@ -293,46 +289,51 @@ def musr_fr(line, task_name: str = None):
 
 # math-hard-fr prompt function
 NL_PROMPT = """Problème:
-Déterminer le domaine de l'expression $\frac{\sqrt{x-2}}{\sqrt{5-x}}$.
+Déterminer le domaine de l'expression $\\frac{\\sqrt{x-2}}{\\sqrt{5-x}}$.
 
 Solution:
-Les expressions sous chaque racine carrée doivent être positives ou nulles. Ainsi, $x - 2 \ge 0$, donc $x \ge 2$, et $5 - x \ge 0$, donc $x \le 5$. De plus, le dénominateur ne peut pas être nul, donc $5 - x > 0$, ce qui donne $x < 5$. Par conséquent, le domaine de l'expression est $\boxed{[2,5)}$.
-Réponse finale : La réponse finale est $[2,5)$. J'espère que c'est correct.
+Les expressions sous chaque racine carrée doivent être positives ou nulles. Ainsi, $x - 2 \\geq 0$, donc $x \\geq 2$, et $5 - x \\geq 0$, donc $x \\leq 5$. De plus, le dénominateur ne peut pas être nul, donc $5 - x > 0$, ce qui donne $x < 5$. Par conséquent, le domaine de l'expression est $\\boxed{[2,5)}$.
+Réponse finale : La réponse finale est $[2,5)$.
 
 Problème:
-Si $\det \mathbf{A} = 2$ et $\det \mathbf{B} = 12$, déterminer $\det (\mathbf{A} \mathbf{B})$.
+Si $\\det \\mathbf{A} = 2$ et $\\det \\mathbf{B} = 12$, déterminer $\\det (\\mathbf{A} \\mathbf{B})$.
 
 Solution:
-On a que $\det (\mathbf{A} \mathbf{B}) = (\det \mathbf{A})(\det \mathbf{B}) = (2)(12) = \boxed{24}$.
-Réponse finale : La réponse finale est $24$. J'espère que c'est correct.
+On a $\\det (\\mathbf{A} \\mathbf{B}) = (\\det \\mathbf{A})(\\det \\mathbf{B}) = (2)(12) = \\boxed{24}$.
+Réponse finale : La réponse finale est $24$.
 
 Problème:
-Terrell soulève habituellement deux haltères de 20 livres 12 fois. S’il utilise plutôt deux haltères de 15 livres, combien de fois doit-il les soulever pour soulever le même poids total ?
+Terrell soulève habituellement deux haltères de 20 livres 12 fois. S'il utilise plutôt deux haltères de 15 livres, combien de fois doit-il les soulever pour soulever le même poids total ?
 
 Solution:
-Si Terrell soulève deux haltères de 20 livres 12 fois, il soulève un total de $2\cdot 12\cdot20=480$ livres. S’il soulève plutôt deux haltères de 15 livres $n$ fois, il soulèvera un total de $2\cdot15\cdot n=30n$ livres. En égalant cela à 480 livres, on peut résoudre pour $n$ :
-\begin{align*}
-30n&=480\\
-\Rightarrow\qquad n&=480/30=\boxed{16}
-\end{align*}
-Réponse finale : La réponse finale est $16$. J'espère que c'est correct.
+Si Terrell soulève deux haltères de 20 livres 12 fois, il soulève un total de $2 \\cdot 12 \\cdot 20 = 480$ livres. S'il soulève plutôt deux haltères de 15 livres $n$ fois, il soulèvera un total de $2 \\cdot 15 \\cdot n = 30n$ livres. En égalant cela à 480 livres, on peut résoudre pour $n$ :
+\\begin{align*}
+30n &= 480\\\\
+\\Rightarrow\\qquad n &= 480/30 = \\boxed{16}
+\\end{align*}
+Réponse finale : La réponse finale est $16$.
 
 Problème:
-Si le système d’équations suivant
+Si le système d'équations suivant
 
-\begin{align*}
-6x-4y&=a,\\
-6y-9x &=b.
-\end{align*}admet une solution $(x, y)$ avec $x$ et $y$ tous deux non nuls,
-déterminer $\frac{a}{b}$, en supposant que $b$ est non nul.
+\\begin{align*}
+6x-4y&=a,\\\\
+6y-9x &=b
+\\end{align*}
+
+admet une solution $(x, y)$ avec $x$ et $y$ tous deux non nuls, déterminer $\\frac{a}{b}$, en supposant que $b$ est non nul.
 
 Solution:
-Si on multiplie la première équation par $-\frac{3}{2}$, on obtient
+Si on multiplie la première équation par $-\\frac{3}{2}$, on obtient
 
-$$6y - 9x = -\frac{3}{2}a.$$Or on sait aussi que $6y - 9x = b$, donc
+$$6y - 9x = -\\frac{3}{2}a.$$
 
-$$-\frac{3}{2}a = b \Rightarrow \frac{a}{b} = \boxed{-\frac{2}{3}}.$$
-Réponse finale : La réponse finale est $-\frac{2}{3}$. J'espère que c'est correct."""
+Or on sait aussi que $6y - 9x = b$, donc
+
+$$-\\frac{3}{2}a = b \\Rightarrow \\frac{a}{b} = \\boxed{-\\frac{2}{3}}.$$
+
+Réponse finale : La réponse finale est $-\\frac{2}{3}$.
+"""
 
 
 def prompt_math_hard_fr(line, task_name: str = None):
