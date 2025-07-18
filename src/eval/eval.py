@@ -2,10 +2,11 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-from patch_lighteval.patch import patch_reasoning, patch_metrics
+from patch_lighteval.patch import patch_reasoning
 
 patch_reasoning()
-patch_metrics()
+
+
 from lighteval.logging.evaluation_tracker import EvaluationTracker
 from lighteval.models.vllm.vllm_model import VLLMModelConfig
 from lighteval.pipeline import ParallelismManager, Pipeline, PipelineParameters
@@ -56,6 +57,7 @@ def main(args):
     extras_yaml = config.get("extras", {})
     tasks_yaml = config.get("tasks", [])
     os.environ["answer_token"] = extras_yaml.get("answer_token", "")
+    os.environ["enable_thinking"] = str(extras_yaml.get("enable_thinking", False))
 
     # Prepare model configuration
     config_kwargs = dict(model_yaml)

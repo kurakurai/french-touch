@@ -1,4 +1,5 @@
 from importlib import import_module
+import importlib
 import inspect
 import textwrap
 import sys
@@ -210,44 +211,8 @@ def patch_reasoning():
         pipeline_module.Pipeline = patched_pipeline
         sys.modules["lighteval.pipeline"].Pipeline = patched_pipeline
 
-        print("Lighteval enable_thinking patching successful.")
+        print("Lighteval enable_thinking successfully patched.")
 
     except Exception as e:
         raise RuntimeError(f"Failed to patch enable_thinking: {str(e)}")
-
-def patch_metrics_sample():
-    try:
-        metrics_sample = import_module("lighteval.metrics.metrics_sample")
-
-        metrics_thinking = import_module("patch_lighteval.metrics") 
-        
-        ExactMatchesThinking = getattr(metrics_thinking, "ExactMatchesThinking")
-
-        setattr(metrics_sample, "ExactMatchesThinking", ExactMatchesThinking)     
-        sys.modules["llighteval.metrics.metrics_sample"] = metrics_sample
-    
-    except Exception as e:
-            raise RuntimeError(f"Failed to patch metrics_sample: {str(e)}")
-
-def patch_metrics():
-    patch_metrics_sample()
-    
-    try:
-        metrics_module = import_module("lighteval.metrics.metrics")
-        metrics_class = getattr(metrics_module, "Metrics", None)
-
-        functions = inspect.getsource(metrics_module)
-        functions = textwrap.dedent(functions)
-
-        functions = functions.replace(
-            "ExactMatches",
-            "ExactMatchesThinking",
-        )
-        
-        sys.modules["lighteval.metrics.metrics"] = metrics_module   
-
-        print("Lighteval metrics patching successful.")
-
-    except Exception as e:
-        raise RuntimeError(f"Failed to patch metrics: {str(e)}")
 

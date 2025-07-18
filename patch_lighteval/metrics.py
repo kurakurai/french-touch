@@ -2,6 +2,19 @@ from lighteval.metrics.metrics_sample import ExactMatches
 import re
 from typing import Callable
 import os
+from aenum import Enum
+import numpy as np
+from lighteval.metrics.normalizations import (helm_normalizer)
+
+from lighteval.metrics.utils.metric_utils import (
+    Metric,
+    MetricGrouping,
+    MetricCategory,
+    MetricUseCase,
+    SampleLevelMetric
+)
+from lighteval.utils.utils import as_list
+
 
 class ExactMatchesThinking(ExactMatches):
     """
@@ -41,3 +54,94 @@ class ExactMatchesThinking(ExactMatches):
                 pred = pred.split(self.answer_token, 1)[1]
 
         return super().compute_one_item(gold, pred)
+
+
+
+
+class MetricsThinking(Enum):
+
+    exact_match = SampleLevelMetric(
+        metric_name="em",
+        sample_level_fn=ExactMatchesThinking(strip_strings=True).compute,
+        category=MetricCategory.GENERATIVE,
+        use_case=MetricUseCase.ACCURACY,
+        corpus_level_fn=np.mean,
+        higher_is_better=True,
+    )
+
+    quasi_exact_match = SampleLevelMetric(
+        metric_name="qem",
+        sample_level_fn=ExactMatchesThinking(
+            normalize_gold=helm_normalizer,
+            normalize_pred=helm_normalizer,
+            strip_strings=True,
+        ).compute,
+        category=MetricCategory.GENERATIVE,
+        use_case=MetricUseCase.ACCURACY,
+        corpus_level_fn=np.mean,
+        higher_is_better=True,
+    )
+
+    prefix_exact_match = SampleLevelMetric(
+        metric_name="pem",
+        sample_level_fn=ExactMatchesThinking(strip_strings=True, type_exact_match="prefix").compute,
+        category=MetricCategory.GENERATIVE,
+        use_case=MetricUseCase.ACCURACY,
+        corpus_level_fn=np.mean,
+        higher_is_better=True,
+    )
+
+    prefix_quasi_exact_match = SampleLevelMetric(
+        metric_name="pqem",
+        sample_level_fn=ExactMatchesThinking(
+            normalize_gold=helm_normalizer,
+            normalize_pred=helm_normalizer,
+            type_exact_match="prefix",
+        ).compute,
+        category=MetricCategory.GENERATIVE,
+        use_case=MetricUseCase.ACCURACY,
+        corpus_level_fn=np.mean,
+        higher_is_better=True,
+    )
+    
+    def __str__(self):
+        return self.name.replace("_at_", "@")
+
+    @staticmethod
+    def higher_is_better():
+        res = {}
+        for metric in Metrics:
+            if metric.value.category == MetricCategory.IGNORED:
+                continue
+            if isinstance(metric.value, MetricGrouping):
+                res.update(metric.value.higher_is_better)
+            else:
+                res[metric.value.metric_name] = metric.value.higher_is_better
+        return res
+
+    @staticmethod
+    def corpus_level_fns(metrics: list[Metric]) -> dict[str, callable]:
+        res = {}
+        for metric in metrics:
+            if metric.category == MetricCategory.IGNORED:
+                continue
+            if isinstance(metric, MetricGrouping):
+                if isinstance(metric.corpus_level_fn, dict):
+                    res.update(metric.corpus_level_fn)
+                else:
+                    # Must make sure there is a caching implementation here
+                    for m in metric.metric_name:
+                        res[m] = metric.corpus_level_fn
+            else:
+                res[metric.metric_name] = metric.corpus_level_fn
+        return res
+
+    @staticmethod
+    def all_metrics():
+        res = []
+        for metric in Metrics:
+            if metric.value.category == MetricCategory.IGNORED:
+                continue
+            res.extend(as_list(metric.value.metric_name))
+        return res
+
