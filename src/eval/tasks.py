@@ -76,7 +76,7 @@ hellaswag_fr_task = LightevalTaskConfig(
     few_shots_select="random",
     generation_size=1 if not enable_thinking else 4096,
     metric=metrics,
-    stop_sequence=["\n"],
+    stop_sequence=[],
     trust_dataset=True,
     version=0,
 )

@@ -19,11 +19,11 @@ extras:
   push_to_hub: false
 
 tasks:
-  # - "community|ifeval-fr|0|1"
-  # - "community|gpqa-diamond-fr|0|1"
-  # - "community|bbh-fr|0|1"
-  # - "community|hellaswag-fr|0|1"
-  - "community|boolq-fr|0|1"
-  # - "community|mmlu_fr|0|1"
-  # - "community|musr-fr|0|1"
-  # - "community|math-hard-fr|0|1"
+  # - "community|ifeval-fr|0|0"
+  # - "community|gpqa-diamond-fr|0|0"
+  # - "community|bbh-fr|0|0"
+  # - "community|hellaswag-fr|0|0"
+  # - "community|boolq-fr|0|0"
+  # - "community|mmlu_fr|0|0"
+  # - "community|musr-fr|0|0"
+  # - "community|math-hard-fr|0|0"
