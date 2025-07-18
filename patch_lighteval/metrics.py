@@ -5,7 +5,7 @@ import os
 from aenum import Enum
 import numpy as np
 from lighteval.metrics.normalizations import (helm_normalizer)
-
+from lighteval.metrics.metrics import Metrics
 from lighteval.metrics.utils.metric_utils import (
     Metric,
     MetricGrouping,
@@ -47,7 +47,7 @@ class ExactMatchesThinking(ExactMatches):
         gold: str,
         pred: str,
     ) -> float:
-        print("working")
+
         #extract the answer afte the answer token if it exists
         if self.answer_token:
             if self.answer_token in pred:
@@ -55,11 +55,7 @@ class ExactMatchesThinking(ExactMatches):
 
         return super().compute_one_item(gold, pred)
 
-
-
-
-class MetricsThinking(Enum):
-
+class MetricsThinking:
     exact_match = SampleLevelMetric(
         metric_name="em",
         sample_level_fn=ExactMatchesThinking(strip_strings=True).compute,
@@ -103,45 +99,7 @@ class MetricsThinking(Enum):
         corpus_level_fn=np.mean,
         higher_is_better=True,
     )
-    
-    def __str__(self):
-        return self.name.replace("_at_", "@")
 
-    @staticmethod
-    def higher_is_better():
-        res = {}
-        for metric in Metrics:
-            if metric.value.category == MetricCategory.IGNORED:
-                continue
-            if isinstance(metric.value, MetricGrouping):
-                res.update(metric.value.higher_is_better)
-            else:
-                res[metric.value.metric_name] = metric.value.higher_is_better
-        return res
 
-    @staticmethod
-    def corpus_level_fns(metrics: list[Metric]) -> dict[str, callable]:
-        res = {}
-        for metric in metrics:
-            if metric.category == MetricCategory.IGNORED:
-                continue
-            if isinstance(metric, MetricGrouping):
-                if isinstance(metric.corpus_level_fn, dict):
-                    res.update(metric.corpus_level_fn)
-                else:
-                    # Must make sure there is a caching implementation here
-                    for m in metric.metric_name:
-                        res[m] = metric.corpus_level_fn
-            else:
-                res[metric.metric_name] = metric.corpus_level_fn
-        return res
 
-    @staticmethod
-    def all_metrics():
-        res = []
-        for metric in Metrics:
-            if metric.value.category == MetricCategory.IGNORED:
-                continue
-            res.extend(as_list(metric.value.metric_name))
-        return res
 

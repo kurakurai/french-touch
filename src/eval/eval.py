@@ -57,7 +57,13 @@ def main(args):
     extras_yaml = config.get("extras", {})
     tasks_yaml = config.get("tasks", [])
     os.environ["answer_token"] = extras_yaml.get("answer_token", "")
-    os.environ["enable_thinking"] = str(extras_yaml.get("enable_thinking", False))
+    
+    if not extras_yaml.get("use_chat_template"):
+        extras_yaml["use_chat_template"] = False
+    
+    else : 
+        os.environ["enable_thinking"] = str(extras_yaml.get("enable_thinking"))
+
 
     # Prepare model configuration
     config_kwargs = dict(model_yaml)
