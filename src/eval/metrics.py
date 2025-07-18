@@ -11,7 +11,7 @@ from lighteval.metrics.dynamic_metrics import (
     ExprExtractionConfig,
     IndicesExtractionConfig,
     LatexExtractionConfig,
-    compare_gold_target,
+    compare_gold_target, 
     extract_target_from_pred,
     get_extraction_regexes,
     multilingual_extractive_match_metric,
