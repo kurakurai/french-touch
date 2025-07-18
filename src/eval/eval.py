@@ -64,6 +64,10 @@ def main(args):
     else : 
         os.environ["enable_thinking"] = str(extras_yaml.get("enable_thinking"))
 
+    if extras_yaml.get("enable_thinking") and not extras_yaml.get("answer_token"):
+        raise ValueError(
+            "enable_thinking is set to True, but answer_token is not provided in the config."
+        )
 
     # Prepare model configuration
     config_kwargs = dict(model_yaml)
