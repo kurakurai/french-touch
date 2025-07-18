@@ -38,7 +38,7 @@ ifeval_fr_task = LightevalTaskConfig(
     evaluation_splits=["train"],
     few_shots_split="train",
     few_shots_select="random",
-    generation_size=8192,
+    generation_size=4096,
     stop_sequence=[],  # no stop sequence, will use eot token
     version="0.1",
 )
@@ -54,7 +54,7 @@ gpqa_diamond_fr_task = LightevalTaskConfig(
     evaluation_splits=["train"],
     few_shots_split="train",
     few_shots_select="random",
-    generation_size=8192,
+    generation_size=4096,
     metric=[
         custom_metric.gpqa_instruct_pass_fr_at_1_1n,
     ],
@@ -93,7 +93,7 @@ math_hard_fr_task = LightevalTaskConfig(
     evaluation_splits=["test"],
     few_shots_split="train",
     few_shots_select="random",
-    generation_size=8192,
+    generation_size=4096,
     metric=[
         custom_metric.math_pass_fr_at_1_1n,
     ],
