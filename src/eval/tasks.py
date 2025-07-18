@@ -1,5 +1,4 @@
 from lighteval.metrics.metrics import Metrics
-from patch_lighteval.metrics import MetricsThinking
 from lighteval.tasks.extended.ifeval.main import ifeval_metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
@@ -15,6 +14,7 @@ from lighteval.utils.language import Language
 from lighteval.tasks.templates.utils.formulation import MCFFormulation
 import prompts as custom_prompt
 import metrics as custom_metric
+from metrics import MetricsThinking
 import os
 
 enable_thinking = os.environ.get("enable_thinking", "false").lower() == "true"
@@ -485,7 +485,7 @@ bbh_ruin_names_community = LightevalTaskConfig(
     few_shots_select="random",
     generation_size=20 if not enable_thinking else 4096,
     metric=metrics,
-    stop_sequence=["</s>", "Q=", "\n\n"] if not enable_thinking else [],,
+    stop_sequence=["</s>", "Q=", "\n\n"] if not enable_thinking else [],
     trust_dataset=True,
     version=0,
 )
